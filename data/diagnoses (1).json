@@ -1,0 +1,652 @@
+[
+  {
+    "_id": "bb1b335e-e422-4a6e-8370-59558e52e3f0",
+    "patientId": "7bd84dde-cd6d-410f-b576-d225b6e97cd4",
+    "doctorId": "23c2499c-fe33-4943-aa6a-85401e8c92aa",
+    "symptoms": [
+      "Fatigue",
+      "Nausea"
+    ],
+    "labReportId": "e51d66d4-45b5-41ab-ba77-215d36607573",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Viral Fever",
+    "prescription": "Throw spring trip their light lose design."
+  },
+  {
+    "_id": "61764a85-116a-499c-acc9-a3acbbda20b9",
+    "patientId": "d6368831-55b6-46d0-91f1-d9aec186adc9",
+    "doctorId": "d8e5b0d7-e87e-410f-89a9-856ea83a40bd",
+    "symptoms": [
+      "Fever",
+      "Nausea"
+    ],
+    "labReportId": "6fb4c07e-5eb9-4cbb-a98b-d3a39dbfaea4",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "The charge after true group nice."
+  },
+  {
+    "_id": "f23e8d74-3f73-4395-b6ba-5e1ef7667197",
+    "patientId": "60a25799-bd49-4f5a-a000-03f5c0d50384",
+    "doctorId": "341c317b-5730-4a7b-b964-2707fcbad54f",
+    "symptoms": [
+      "Pain",
+      "Fatigue"
+    ],
+    "labReportId": "a925d928-b8cc-4b10-9d20-204bcc873f51",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Normal",
+    "prescription": "Attorney agree may late foot capital certainly price."
+  },
+  {
+    "_id": "61c4fc1b-729e-4570-b163-db56f466552d",
+    "patientId": "7c8d0d6f-77c3-4cce-8fff-69ca48c8c4b6",
+    "doctorId": "23c2499c-fe33-4943-aa6a-85401e8c92aa",
+    "symptoms": [
+      "Fever",
+      "Fatigue"
+    ],
+    "labReportId": "e89168b5-33d0-44dc-8a7c-7651e3de3d73",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "Tough can education various class want rise heart."
+  },
+  {
+    "_id": "d7d1bf64-a9ef-49c3-bad6-be141f94b4b0",
+    "patientId": "34d80a2f-938b-48a0-ab97-3d15853e4ca7",
+    "doctorId": "57daf79a-44d9-4cbd-9c33-56a64e7a5c54",
+    "symptoms": [
+      "Cough",
+      "Fever"
+    ],
+    "labReportId": "fa311fee-67e3-4cc8-b897-7b18cf715333",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Viral Fever",
+    "prescription": "Race own everyone believe bad ahead these can."
+  },
+  {
+    "_id": "83337e1b-70ac-4182-abcd-a62d83fbb629",
+    "patientId": "73ed78a2-8343-4036-93ad-65ae36ac078c",
+    "doctorId": "d8e5b0d7-e87e-410f-89a9-856ea83a40bd",
+    "symptoms": [
+      "Pain",
+      "Fever"
+    ],
+    "labReportId": "5e414d81-8d74-4c05-a3b1-6b0d842c30d5",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "Them difference thus style smile his idea."
+  },
+  {
+    "_id": "0b48a516-ae34-4d3d-b48b-e726a21d557e",
+    "patientId": "60a25799-bd49-4f5a-a000-03f5c0d50384",
+    "doctorId": "d8e5b0d7-e87e-410f-89a9-856ea83a40bd",
+    "symptoms": [
+      "Dizziness",
+      "Fatigue"
+    ],
+    "labReportId": "a68cfa92-e7e0-4726-99cd-11c76b3b172f",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Viral Fever",
+    "prescription": "Third fall along himself anyone middle."
+  },
+  {
+    "_id": "14b96861-06d2-4d0d-8b03-8f3d9a3e6df2",
+    "patientId": "a03ca65c-d251-4840-9259-92df266c10d2",
+    "doctorId": "57daf79a-44d9-4cbd-9c33-56a64e7a5c54",
+    "symptoms": [
+      "Nausea",
+      "Fever"
+    ],
+    "labReportId": "328cb9f9-4308-4c63-b47f-e9285d000adb",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Viral Fever",
+    "prescription": "But do growth deep."
+  },
+  {
+    "_id": "d59f73f7-ee40-4cc7-9dba-3a561cd87560",
+    "patientId": "43b0f641-092f-46f1-a257-ebf68d592a33",
+    "doctorId": "341c317b-5730-4a7b-b964-2707fcbad54f",
+    "symptoms": [
+      "Pain",
+      "Fatigue"
+    ],
+    "labReportId": "b029c354-08f0-4ce7-8398-22fe37a97c03",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Normal",
+    "prescription": "Begin method usually that."
+  },
+  {
+    "_id": "d8f168e5-994d-4a2e-8a7a-5cd69bb2a622",
+    "patientId": "30fc5689-29e1-470f-aef1-6c108e4495ea",
+    "doctorId": "d8e5b0d7-e87e-410f-89a9-856ea83a40bd",
+    "symptoms": [
+      "Fever",
+      "Cough"
+    ],
+    "labReportId": "21ae691b-f9ab-4b8f-927e-1e79c7276392",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "Read beyond financial base stay."
+  },
+  {
+    "_id": "efb93bc3-0eb1-4392-a92a-b8677ce8c20c",
+    "patientId": "f4d207e3-5791-4583-9964-35166f419bca",
+    "doctorId": "4de80e57-25dc-4c1b-a8ef-9e100ccfdfb1",
+    "symptoms": [
+      "Fever",
+      "Fatigue"
+    ],
+    "labReportId": "eb2665ac-0568-4b7d-bf43-04f858d99043",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "Skin live set."
+  },
+  {
+    "_id": "522b26ee-1250-4ed4-bccb-9057354df9f5",
+    "patientId": "7bd84dde-cd6d-410f-b576-d225b6e97cd4",
+    "doctorId": "397b18f9-c6eb-4b6a-a522-c1e2448595a3",
+    "symptoms": [
+      "Fever",
+      "Fatigue"
+    ],
+    "labReportId": "86fd02f9-5df4-44d8-a70e-9bf678407407",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Normal",
+    "prescription": "Big raise program quite summer keep."
+  },
+  {
+    "_id": "7154cbcf-ce74-42a2-a6fe-d48637c3fe4c",
+    "patientId": "34d80a2f-938b-48a0-ab97-3d15853e4ca7",
+    "doctorId": "23c2499c-fe33-4943-aa6a-85401e8c92aa",
+    "symptoms": [
+      "Cough",
+      "Pain"
+    ],
+    "labReportId": "82112023-4d53-4185-be6f-63196f36b1c8",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Anemia",
+    "prescription": "Environment executive grow treatment first first two."
+  },
+  {
+    "_id": "a34912ea-7a4a-4a94-9467-58ba551acdd3",
+    "patientId": "7bd84dde-cd6d-410f-b576-d225b6e97cd4",
+    "doctorId": "23c2499c-fe33-4943-aa6a-85401e8c92aa",
+    "symptoms": [
+      "Fatigue",
+      "Pain"
+    ],
+    "labReportId": "37ed7234-7ea7-462f-b43c-13eaf39a834c",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "Position way end discover role attack left young."
+  },
+  {
+    "_id": "f2502254-6ad7-42b1-8376-b1c9687384f5",
+    "patientId": "716234cd-111b-4cb1-9dc7-1092522f867f",
+    "doctorId": "397b18f9-c6eb-4b6a-a522-c1e2448595a3",
+    "symptoms": [
+      "Fatigue",
+      "Nausea"
+    ],
+    "labReportId": "1877f5c8-75c0-4bb5-8504-963a568f039a",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Anemia",
+    "prescription": "Place hand want city carry environment."
+  },
+  {
+    "_id": "46fa160f-94a5-4ae9-beea-55e79a4c08ab",
+    "patientId": "f4d207e3-5791-4583-9964-35166f419bca",
+    "doctorId": "d1c9fa9a-e83f-48eb-a600-d2ab5e54f2e6",
+    "symptoms": [
+      "Pain",
+      "Fatigue"
+    ],
+    "labReportId": "09fb7cda-d1ad-44c9-ad6c-f56cde3b1c99",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Viral Fever",
+    "prescription": "Choice whether around impact remember."
+  },
+  {
+    "_id": "a2d71278-ff27-4efb-a50b-4bfcff1549e4",
+    "patientId": "f4d207e3-5791-4583-9964-35166f419bca",
+    "doctorId": "397b18f9-c6eb-4b6a-a522-c1e2448595a3",
+    "symptoms": [
+      "Dizziness",
+      "Pain"
+    ],
+    "labReportId": "6fb4c07e-5eb9-4cbb-a98b-d3a39dbfaea4",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Anemia",
+    "prescription": "Director painting poor miss southern within budget."
+  },
+  {
+    "_id": "3a0e6c71-7485-4449-9fe6-4eebe2cfa121",
+    "patientId": "a03ca65c-d251-4840-9259-92df266c10d2",
+    "doctorId": "23c2499c-fe33-4943-aa6a-85401e8c92aa",
+    "symptoms": [
+      "Cough",
+      "Pain"
+    ],
+    "labReportId": "27aae414-227c-4a18-a455-75d999815a48",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Normal",
+    "prescription": "Detail this finally with."
+  },
+  {
+    "_id": "a6afe308-64dd-44af-a3ed-a5c0259b1e72",
+    "patientId": "30fc5689-29e1-470f-aef1-6c108e4495ea",
+    "doctorId": "7a2e57c7-c680-412c-82f2-54892a9d1978",
+    "symptoms": [
+      "Fever",
+      "Cough"
+    ],
+    "labReportId": "f91fafe3-c297-43c6-9499-436e955854c4",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Anemia",
+    "prescription": "Bad her great field."
+  },
+  {
+    "_id": "63c050e0-266a-4397-89c4-73f2e144ef6b",
+    "patientId": "e5987e67-1e86-4800-b887-3124eca6280b",
+    "doctorId": "113a4361-7d65-480d-9882-ee8b09c20326",
+    "symptoms": [
+      "Fever",
+      "Fatigue"
+    ],
+    "labReportId": "7829caa6-54aa-4bcb-bd8c-6be189ad60e9",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Viral Fever",
+    "prescription": "Knowledge defense establish represent already call grow."
+  },
+  {
+    "_id": "f48ded10-3bac-4905-94ad-eab8c1959f09",
+    "patientId": "2f1d753b-0a42-4600-b22f-2053d1bc2361",
+    "doctorId": "23c2499c-fe33-4943-aa6a-85401e8c92aa",
+    "symptoms": [
+      "Pain",
+      "Cough"
+    ],
+    "labReportId": "7829caa6-54aa-4bcb-bd8c-6be189ad60e9",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "Record move staff amount government film."
+  },
+  {
+    "_id": "62add0ef-48d6-47fe-b18f-afa1bc3b82ec",
+    "patientId": "42627f4a-453e-4489-83d0-9b611bca64dc",
+    "doctorId": "23c2499c-fe33-4943-aa6a-85401e8c92aa",
+    "symptoms": [
+      "Fever",
+      "Pain"
+    ],
+    "labReportId": "00460432-284f-46ba-9753-e9d78980f963",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Anemia",
+    "prescription": "Picture PM decade."
+  },
+  {
+    "_id": "da09808e-fa2e-48b4-a564-95580f2e8bf3",
+    "patientId": "d6368831-55b6-46d0-91f1-d9aec186adc9",
+    "doctorId": "d1c9fa9a-e83f-48eb-a600-d2ab5e54f2e6",
+    "symptoms": [
+      "Cough",
+      "Nausea"
+    ],
+    "labReportId": "5e414d81-8d74-4c05-a3b1-6b0d842c30d5",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Normal",
+    "prescription": "Mouth I detail situation."
+  },
+  {
+    "_id": "e4a6fa32-365d-46fc-99e1-a36c895779fd",
+    "patientId": "73ed78a2-8343-4036-93ad-65ae36ac078c",
+    "doctorId": "57c2e274-9312-41d5-9896-f80b7ab280ed",
+    "symptoms": [
+      "Pain",
+      "Dizziness"
+    ],
+    "labReportId": "c7229dca-d504-4331-bd5f-4f8e4bc22543",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Normal",
+    "prescription": "Chance nearly various kind."
+  },
+  {
+    "_id": "cacbec33-dd15-443a-92e2-fb7e4105ae01",
+    "patientId": "29fe8c55-2e39-47ac-a44a-460e574f6d67",
+    "doctorId": "23c2499c-fe33-4943-aa6a-85401e8c92aa",
+    "symptoms": [
+      "Nausea",
+      "Fever"
+    ],
+    "labReportId": "5e40b2e4-493e-438f-9d46-097f11d4322f",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Anemia",
+    "prescription": "She study most professor speak reason process."
+  },
+  {
+    "_id": "b6bb9e68-e1b3-4778-bd1f-4d82550602be",
+    "patientId": "2f1d753b-0a42-4600-b22f-2053d1bc2361",
+    "doctorId": "4de80e57-25dc-4c1b-a8ef-9e100ccfdfb1",
+    "symptoms": [
+      "Dizziness",
+      "Pain"
+    ],
+    "labReportId": "b8f82d2a-7d7f-4548-b242-a410faf94ec9",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Anemia",
+    "prescription": "City today glass our over vote vote."
+  },
+  {
+    "_id": "9e98eb74-7818-4fe8-8349-a7000d77a653",
+    "patientId": "a9da2905-b7d9-49cd-949b-5db69960a499",
+    "doctorId": "57daf79a-44d9-4cbd-9c33-56a64e7a5c54",
+    "symptoms": [
+      "Dizziness",
+      "Cough"
+    ],
+    "labReportId": "37ed7234-7ea7-462f-b43c-13eaf39a834c",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "Customer PM evening thank."
+  },
+  {
+    "_id": "d0a3cac6-8f24-4e7e-8ab2-f9fda17f682f",
+    "patientId": "e7551f73-2858-4a44-9d54-2b4aec18bee3",
+    "doctorId": "57daf79a-44d9-4cbd-9c33-56a64e7a5c54",
+    "symptoms": [
+      "Fever",
+      "Pain"
+    ],
+    "labReportId": "8ac42913-bd00-4e41-9cd0-ccee84329a2c",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Viral Fever",
+    "prescription": "Pattern those tree score general lose."
+  },
+  {
+    "_id": "21d9986b-a2f1-473b-8e59-528b4315d2ed",
+    "patientId": "a03ca65c-d251-4840-9259-92df266c10d2",
+    "doctorId": "57daf79a-44d9-4cbd-9c33-56a64e7a5c54",
+    "symptoms": [
+      "Nausea",
+      "Fatigue"
+    ],
+    "labReportId": "27aae414-227c-4a18-a455-75d999815a48",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Anemia",
+    "prescription": "Follow far part."
+  },
+  {
+    "_id": "2806aed5-1e4f-42f5-8ad8-7e794342f3d0",
+    "patientId": "e2093560-18b7-4972-b8e9-d0a30df701d3",
+    "doctorId": "397b18f9-c6eb-4b6a-a522-c1e2448595a3",
+    "symptoms": [
+      "Fatigue",
+      "Nausea"
+    ],
+    "labReportId": "21ae691b-f9ab-4b8f-927e-1e79c7276392",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "Return summer power model explain play."
+  },
+  {
+    "_id": "5b45fd88-c22d-469f-839f-3aab496535eb",
+    "patientId": "e7551f73-2858-4a44-9d54-2b4aec18bee3",
+    "doctorId": "d1c9fa9a-e83f-48eb-a600-d2ab5e54f2e6",
+    "symptoms": [
+      "Dizziness",
+      "Fever"
+    ],
+    "labReportId": "328cb9f9-4308-4c63-b47f-e9285d000adb",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Viral Fever",
+    "prescription": "Talk his particularly identify."
+  },
+  {
+    "_id": "cf53e0d5-edd5-4c89-bf08-faf26d3b94b0",
+    "patientId": "7f1a614d-38a8-4e16-a712-b0986dc0d62f",
+    "doctorId": "57daf79a-44d9-4cbd-9c33-56a64e7a5c54",
+    "symptoms": [
+      "Dizziness",
+      "Cough"
+    ],
+    "labReportId": "09fb7cda-d1ad-44c9-ad6c-f56cde3b1c99",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Viral Fever",
+    "prescription": "Left world sort year others unit both."
+  },
+  {
+    "_id": "34f39896-640b-4ef1-8da8-49a7787f9bea",
+    "patientId": "29fe8c55-2e39-47ac-a44a-460e574f6d67",
+    "doctorId": "d1c9fa9a-e83f-48eb-a600-d2ab5e54f2e6",
+    "symptoms": [
+      "Dizziness",
+      "Fatigue"
+    ],
+    "labReportId": "fd9e8be9-0812-4660-8db2-753578b64d74",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Normal",
+    "prescription": "Gas stop crime sound."
+  },
+  {
+    "_id": "e97a28a3-8e92-4272-8332-9401b94aa085",
+    "patientId": "2ee73c55-cfd8-4063-893b-06f02c8580c2",
+    "doctorId": "7a2e57c7-c680-412c-82f2-54892a9d1978",
+    "symptoms": [
+      "Fever",
+      "Nausea"
+    ],
+    "labReportId": "5e40b2e4-493e-438f-9d46-097f11d4322f",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Viral Fever",
+    "prescription": "House yard resource serious sing might service truth."
+  },
+  {
+    "_id": "ea57a584-69c8-4c52-9525-4ef9c7933d9a",
+    "patientId": "d2be8294-8279-4157-9881-0d2e416662c3",
+    "doctorId": "397b18f9-c6eb-4b6a-a522-c1e2448595a3",
+    "symptoms": [
+      "Dizziness",
+      "Pain"
+    ],
+    "labReportId": "8ae8255d-d213-473f-a8cf-642ff5a5a774",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Normal",
+    "prescription": "Charge garden away generation son song."
+  },
+  {
+    "_id": "0eb21ba4-d98b-4b8c-b59d-acea8d852bc6",
+    "patientId": "2250a098-45bf-45fb-99e6-d22c981be6f3",
+    "doctorId": "341c317b-5730-4a7b-b964-2707fcbad54f",
+    "symptoms": [
+      "Dizziness",
+      "Fever"
+    ],
+    "labReportId": "5e40b2e4-493e-438f-9d46-097f11d4322f",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Normal",
+    "prescription": "Wide summer media add wind sense back evening."
+  },
+  {
+    "_id": "75d99ebb-0d97-430b-901d-aec30b5b1c9d",
+    "patientId": "d2be8294-8279-4157-9881-0d2e416662c3",
+    "doctorId": "23c2499c-fe33-4943-aa6a-85401e8c92aa",
+    "symptoms": [
+      "Cough",
+      "Dizziness"
+    ],
+    "labReportId": "602ead6e-7705-4eb0-960c-6ca561b7cf60",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "Future nothing low much same."
+  },
+  {
+    "_id": "c6bd5ca5-8e5d-489b-9a61-38411277fb06",
+    "patientId": "7bd84dde-cd6d-410f-b576-d225b6e97cd4",
+    "doctorId": "7a2e57c7-c680-412c-82f2-54892a9d1978",
+    "symptoms": [
+      "Nausea",
+      "Pain"
+    ],
+    "labReportId": "1877f5c8-75c0-4bb5-8504-963a568f039a",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "Himself kid loss process."
+  },
+  {
+    "_id": "bd12558e-7991-480e-938c-5cf6ebcf7098",
+    "patientId": "716234cd-111b-4cb1-9dc7-1092522f867f",
+    "doctorId": "d8e5b0d7-e87e-410f-89a9-856ea83a40bd",
+    "symptoms": [
+      "Pain",
+      "Nausea"
+    ],
+    "labReportId": "21ae691b-f9ab-4b8f-927e-1e79c7276392",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Normal",
+    "prescription": "College special everything add environmental such will."
+  },
+  {
+    "_id": "a0119da0-6478-4cac-8149-0364dec3e3df",
+    "patientId": "a6c0ab10-a1f3-4417-b781-f14da22bcb4f",
+    "doctorId": "4de80e57-25dc-4c1b-a8ef-9e100ccfdfb1",
+    "symptoms": [
+      "Nausea",
+      "Dizziness"
+    ],
+    "labReportId": "cbe2df73-0fbb-4e43-b210-91700beb2319",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Viral Fever",
+    "prescription": "Thought include during your environmental human staff."
+  },
+  {
+    "_id": "e9a8d8b0-674e-4ad4-aacf-fa49cd62cd88",
+    "patientId": "a9da2905-b7d9-49cd-949b-5db69960a499",
+    "doctorId": "4de80e57-25dc-4c1b-a8ef-9e100ccfdfb1",
+    "symptoms": [
+      "Pain",
+      "Cough"
+    ],
+    "labReportId": "5e414d81-8d74-4c05-a3b1-6b0d842c30d5",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Anemia",
+    "prescription": "Spring bring create old."
+  },
+  {
+    "_id": "0e4caba4-3fcb-475f-9911-f6729f507cc4",
+    "patientId": "e7551f73-2858-4a44-9d54-2b4aec18bee3",
+    "doctorId": "113a4361-7d65-480d-9882-ee8b09c20326",
+    "symptoms": [
+      "Pain",
+      "Nausea"
+    ],
+    "labReportId": "89b3702f-f79e-4537-9eac-261f4b09a9dc",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "Few scene parent."
+  },
+  {
+    "_id": "ac58ebd9-6d4b-407c-ab7d-4cec60b8f0dd",
+    "patientId": "a6c0ab10-a1f3-4417-b781-f14da22bcb4f",
+    "doctorId": "23c2499c-fe33-4943-aa6a-85401e8c92aa",
+    "symptoms": [
+      "Nausea",
+      "Fever"
+    ],
+    "labReportId": "328cb9f9-4308-4c63-b47f-e9285d000adb",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "Positive news newspaper very single age."
+  },
+  {
+    "_id": "1558bd7c-cc08-4f60-8951-3d51f078efed",
+    "patientId": "7f1a614d-38a8-4e16-a712-b0986dc0d62f",
+    "doctorId": "341c317b-5730-4a7b-b964-2707fcbad54f",
+    "symptoms": [
+      "Dizziness",
+      "Fatigue"
+    ],
+    "labReportId": "94d26f59-e006-4c55-a7f6-099f53a8f34d",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "Democrat black born office act government phone hotel."
+  },
+  {
+    "_id": "80d6f98f-08bf-48af-ace6-49450cbb6bad",
+    "patientId": "d4683f2b-4f84-4b8d-b1ee-f679d1b85220",
+    "doctorId": "7a2e57c7-c680-412c-82f2-54892a9d1978",
+    "symptoms": [
+      "Pain",
+      "Dizziness"
+    ],
+    "labReportId": "6fb4c07e-5eb9-4cbb-a98b-d3a39dbfaea4",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Anemia",
+    "prescription": "Several put simple way strong vote cause public."
+  },
+  {
+    "_id": "8424ee7d-fed2-41f5-8446-ab011134f6b6",
+    "patientId": "43b0f641-092f-46f1-a257-ebf68d592a33",
+    "doctorId": "57c2e274-9312-41d5-9896-f80b7ab280ed",
+    "symptoms": [
+      "Fatigue",
+      "Cough"
+    ],
+    "labReportId": "ad952fd4-eb7e-4274-9c79-6356a4088adf",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Viral Fever",
+    "prescription": "Finally rise nation section fly lot but."
+  },
+  {
+    "_id": "00fccc08-6dc6-4ee1-8d00-e18c949f33a0",
+    "patientId": "d2be8294-8279-4157-9881-0d2e416662c3",
+    "doctorId": "23c2499c-fe33-4943-aa6a-85401e8c92aa",
+    "symptoms": [
+      "Dizziness",
+      "Cough"
+    ],
+    "labReportId": "516d075b-a67b-4e97-a75a-685397c458c3",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Anemia",
+    "prescription": "Dream time could."
+  },
+  {
+    "_id": "3f7db109-fa21-40cf-aefb-7eb753e4a511",
+    "patientId": "34d80a2f-938b-48a0-ab97-3d15853e4ca7",
+    "doctorId": "7a2e57c7-c680-412c-82f2-54892a9d1978",
+    "symptoms": [
+      "Dizziness",
+      "Fever"
+    ],
+    "labReportId": "832f2a2c-541c-492f-8da5-17eb60026797",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Viral Fever",
+    "prescription": "After hair describe point appear."
+  },
+  {
+    "_id": "78be95f8-cc01-4b47-8de3-f625bf1d2f9b",
+    "patientId": "60a25799-bd49-4f5a-a000-03f5c0d50384",
+    "doctorId": "397b18f9-c6eb-4b6a-a522-c1e2448595a3",
+    "symptoms": [
+      "Dizziness",
+      "Fatigue"
+    ],
+    "labReportId": "09fb7cda-d1ad-44c9-ad6c-f56cde3b1c99",
+    "aiSuggestion": "Likely viral infection",
+    "finalDiagnosis": "Anemia",
+    "prescription": "Fear above they ready happy trade buy."
+  },
+  {
+    "_id": "2437ea20-1924-4f14-bec8-e265822f29bb",
+    "patientId": "7c8d0d6f-77c3-4cce-8fff-69ca48c8c4b6",
+    "doctorId": "d1c9fa9a-e83f-48eb-a600-d2ab5e54f2e6",
+    "symptoms": [
+      "Pain",
+      "Nausea"
+    ],
+    "labReportId": "516d075b-a67b-4e97-a75a-685397c458c3",
+    "aiSuggestion": "Needs further testing",
+    "finalDiagnosis": "Typhoid",
+    "prescription": "Resource effort part civil."
+  }
+]

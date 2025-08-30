@@ -1,0 +1,285 @@
+@host = localhost
+@port = 5000
+@baseUrl = http://{{host}}:{{port}}
+
+# Unique suffix for emails in this session
+@uniq = {{$timestamp}}
+@patientEmail = patient{{uniq}}@example.com
+@patientPass = Test1234
+
+# Paste tokens after login requests run
+@patientToken = 
+@doctorToken = 
+@adminToken = 
+
+### Health
+GET {{baseUrl}}/health
+
+### Register Patient
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "lab",
+  "email": "lab@gmail.com",
+  "password": "Suresh@123",
+  "role": "lab",
+  "gender": "male",
+  "dateOfBirth": "1990-01-01",
+  "emergencyContact": {
+    "name": "John Emergency",
+    "phone": "+1 555 0111"
+  }
+}
+
+### Login Patient
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "Suresh@123"
+}
+##################
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Dr. Jane Doe",
+  "email": "doctor1@example.com",
+  "password": "DoctorPass123",
+  "role": "doctor",
+  "specialization": "Cardiology",
+  "licenseNumber": "DOC-123456",
+  "experience": 8,
+  "consultationFee": 1200,
+  "department": "Cardiology"
+}
+#######
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "doctor1@example.com", "password": "DoctorPass123" }
+
+### Auth: Me (Patient)
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OTczNWU5NWMyNGNmOWU5MGExZWE3OCIsImlhdCI6MTc1NDc0MDQ0OCwiZXhwIjoxNzU1MzQ1MjQ4fQ.0cJRQFSJwz7I-b0L52x_zb4Tl_2gflAdupQHoGY6HOA
+
+### Patient: Dashboard Stats
+GET {{baseUrl}}/api/patient/dashboard-stats
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OTczNWU5NWMyNGNmOWU5MGExZWE3OCIsImlhdCI6MTc1NDc0MDQ0OCwiZXhwIjoxNzU1MzQ1MjQ4fQ.0cJRQFSJwz7I-b0L52x_zb4Tl_2gflAdupQHoGY6HOA
+
+
+### Patient: List Appointments
+GET {{baseUrl}}/api/patient/appointments?status=scheduled&page=1&limit=5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OTczNWU5NWMyNGNmOWU5MGExZWE3OCIsImlhdCI6MTc1NDc0MDQ0OCwiZXhwIjoxNzU1MzQ1MjQ4fQ.0cJRQFSJwz7I-b0L52x_zb4Tl_2gflAdupQHoGY6HOA
+
+
+# Set an existing doctor ObjectId from your DB
+@doctorId = 000000000000000000000000
+
+### Patient: Book Appointment
+POST {{baseUrl}}/api/patient/appointments
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OTc0MTA2ZDZjMjk2ODQ4NzJjYjQ4MCIsImlhdCI6MTc1NDc1NDA2MSwiZXhwIjoxNzU1MzU4ODYxfQ.yUOxxzB_5KQQ55RmPg-07Op2tXNcp7cQcIVVDvCvneU
+Content-Type: application/json
+
+{
+  "doctor": "{{doctorId}}",
+  "scheduledDate": "2025-12-01",
+  "scheduledTime": "10:30",
+  "type": "consultation",
+  "reasonForVisit": "General health check"
+}
+
+### Patient: Prescriptions
+GET {{baseUrl}}/api/patient/prescriptions
+Authorization: Bearer {{patientToken}}
+
+### Patient: Lab Results
+GET {{baseUrl}}/api/patient/lab-results
+Authorization: Bearer {{patientToken}}
+
+### Patient: Update Profile
+PUT {{baseUrl}}/api/patient/profile
+Authorization: Bearer {{patientToken}}
+Content-Type: application/json
+
+{
+  "phone": "+1 555 0100",
+  "address": { "city": "NY" }
+}
+
+### Doctor: Login (fill email/password of a doctor user)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "doctor@example.com",
+  "password": "DoctorPass123"
+}
+> {% client.global.set("doctorToken", response.body.data.token); %}
+
+### Doctor: Dashboard Stats
+GET {{baseUrl}}/api/doctor/dashboard-stats
+Authorization: Bearer {{doctorToken}}
+
+### Doctor: Patients
+GET {{baseUrl}}/api/doctor/patients?page=1&limit=10
+Authorization: Bearer {{doctorToken}}
+
+### Doctor: Appointments
+GET {{baseUrl}}/api/doctor/appointments?status=scheduled
+Authorization: Bearer {{doctorToken}}
+
+# Set an existing appointment ObjectId
+@appointmentId = 000000000000000000000000
+
+### Doctor: Update Appointment Status
+PATCH {{baseUrl}}/api/doctor/appointments/{{appointmentId}}/status
+Authorization: Bearer {{doctorToken}}
+Content-Type: application/json
+
+{
+  "status": "confirmed"
+}
+
+### Admin: Login (fill admin user creds)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "AdminPass123"
+}
+
+
+### Admin: Dashboard Stats
+GET {{baseUrl}}/api/admin/dashboard-stats
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OTlkZmZiZjRhOTRlOTdmMjZiMWRmYyIsImlhdCI6MTc1NDkxNTk4MiwiZXhwIjoxNzU1NTIwNzgyfQ.ry4OOFZdTG7sTuL7uNwezoP5fWIsL1PSS9LGRAGu0lc
+
+### Admin: Users
+GET {{baseUrl}}/api/admin/users/role=doctor
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OTlkZmZiZjRhOTRlOTdmMjZiMWRmYyIsImlhdCI6MTc1NDkxNTk4MiwiZXhwIjoxNzU1NTIwNzgyfQ.ry4OOFZdTG7sTuL7uNwezoP5fWIsL1PSS9LGRAGu0lc
+
+### Upload (Cloudinary must be configured) - replace boundary and file path
+# POST {{baseUrl}}/api/upload
+# Authorization: Bearer {{patientToken}}
+# Content-Type: multipart/form-data; boundary=---011000010111000001101001
+#
+# -----011000010111000001101001
+# Content-Disposition: form-data; name="file"; filename="sample.png"
+# Content-Type: image/png
+#
+# < ./sample.png
+# -----011000010111000001101001--
+
+### Create a new user
+POST http://localhost:5000/api/admin/users
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OWVjMTdkZGE5YTY0Mzc0NWI3MjMwNyIsImlhdCI6MTc1NTIzNDY5MywiZXhwIjoxNzU1ODM5NDkzfQ.-AiMC6nKnhHHlhVwH2OZXbltMF71mD0RYBy2eeERyao
+
+{
+  "name": "Test User",
+  "email": "testuser@example.com",
+  "role": "doctor",
+  "password": "securePass123",
+  "emergencyContact": {
+    "name": "John Emergency",
+    "phone": "+91-9876543210",
+    "relationship": "Emergency Contact"
+  },
+  "specialization": "General Medicine",
+  "licenseNumber": "LIC-TEST-001",
+  "experience": 5,
+  "consultationFee": 300,
+  "department": "General Medicine"
+}
+
+
+
+### Create a Doctor
+POST http://localhost:5000/api/doctors
+Content-Type: application/json
+
+{
+  "name": "Dr. Jane Doe",
+  "email": "jane@example.com",
+  "password": "securepass",
+  "role": "doctor",
+  "specialization": "Cardiology",
+  "licenseNumber": "LIC123",
+  "experience": 10,
+  "consultationFee": 1000,
+  "department": "Cardiology"
+}
+
+### Get All Doctors
+GET http://localhost:5000/api/doctors
+
+### Get Single Doctor by ID
+GET http://localhost:5000/api/doctors/64f123abc456
+
+### Update Doctor
+PUT http://localhost:5000/api/doctors/64f123abc456
+Content-Type: application/json
+
+{
+  "consultationFee": 1200,
+  "isAvailableForEmergency": true
+}
+
+### Delete Doctor
+DELETE http://localhost:5000/api/doctors/64f123abc456
+
+#####
+POST http://localhost:5000/api/admin/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OWVjMTdkZGE5YTY0Mzc0NWI3MjMwNyIsImlhdCI6MTc1NTI2MTgzMCwiZXhwIjoxNzU1ODY2NjMwfQ.yY5-QH2MJ2yc2Tyt84bJBNXUIk99ns602mlfg8-qIcU
+Content-Type: application/json
+
+{
+  "name": "Dr. John Smith",
+  "email": "dr.john@example.com",
+  "password": "StrongPass123",
+  "role": "doctor",
+  "emergencyContact": {
+    "name": "Jane Smith",
+    "phone": "+123456789",
+    "relationship": "Spouse"
+  },
+  "specialization": "Cardiology",
+  "licenseNumber": "LIC-987654",
+  "experience": 15,
+  "consultationFee": 500,
+  "department": "Cardiology"
+}
+
+#############
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Dr. John Doe",
+  "email": "johndoe@example.com",
+  "password": "Password123",
+  "role": "doctor",
+  "gender": "male",
+
+  "emergencyContact": {
+    "name": "Jane Doe",
+    "phone": "+919876543210"
+  },
+
+  "specialization": "Cardiologist",
+  "licenseNumber": "DOC12345",
+  "experience": 10,
+  "consultationFee": 500,
+  "department": "Cardiology",
+  "bio": "Experienced cardiologist specializing in heart diseases.",
+
+  "education": [
+    { "degree": "MBBS", "institution": "AIIMS", "year": 2010 }
+  ],
+  "workingHours": {
+    "monday": { "start": "09:00", "end": "17:00", "available": true }
+  }
+}
