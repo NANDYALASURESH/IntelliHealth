@@ -7,8 +7,9 @@ const {
   bookAppointment,
   getPrescriptions,
   getLabResults,
-  updateProfile
-} = require('../controllers/patientController');
+  updateProfile,
+  getDoctors
+} = require('./patientController');
 const { protect, authorize } = require('../middleware/auth');
 const { validateAppointment } = require('../middleware/validation');
 
@@ -18,6 +19,9 @@ router.use(authorize('patient'));
 
 // @route   GET /api/patient/dashboard-stats
 router.get('/dashboard-stats', getDashboardStats);
+
+// @route   GET /api/patient/doctors
+router.get('/doctors', getDoctors);
 
 // @route   GET /api/patient/medical-records
 router.get('/medical-records', getMedicalRecords);

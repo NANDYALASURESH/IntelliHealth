@@ -2,6 +2,7 @@ const Appointment = require('../models/Appointment');
 const Patient = require('../models/Patient');
 const MedicalRecord = require('../models/MedicalRecord');
 const Prescription = require('../models/Prescription');
+const LabResult = require('../models/LabResult');
 const { formatResponse } = require('../utils/responseFormatter');
 
 // @desc    Get doctor dashboard statistics
@@ -20,7 +21,8 @@ exports.getDashboardStats = async (req, res) => {
       pendingDiagnoses,
       completedToday,
       upcomingAppointments,
-      recentPatients
+      recentPatients,
+      recentLabResults
     ] = await Promise.all([
       Appointment.countDocuments({
         doctor: doctorId,
@@ -43,17 +45,27 @@ exports.getDashboardStats = async (req, res) => {
         scheduledDate: { $gte: startOfDay },
         status: { $in: ['scheduled', 'confirmed'] }
       })
-      .populate('patient', 'name')
-      .sort({ scheduledDate: 1, scheduledTime: 1 })
-      .limit(5),
+        .populate('patient', 'name')
+        .sort({ scheduledDate: 1, scheduledTime: 1 })
+        .limit(5),
       Patient.find({
-        _id: { $in: await Appointment.distinct('patient', { 
-          doctor: doctorId,
-          updatedAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }
-        }) }
+        _id: {
+          $in: await Appointment.distinct('patient', {
+            doctor: doctorId,
+            updatedAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }
+          })
+        }
       })
-      .sort({ updatedAt: -1 })
-      .limit(5)
+        .sort({ updatedAt: -1 })
+        .limit(5),
+      LabResult.find({
+        orderedBy: doctorId,
+        status: 'completed',
+        updatedAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } // Results from last week
+      })
+        .populate('patient', 'name')
+        .sort({ updatedAt: -1 })
+        .limit(5)
     ]);
 
     const stats = {
@@ -76,7 +88,8 @@ exports.getDashboardStats = async (req, res) => {
     res.status(200).json(formatResponse(true, 'Doctor dashboard statistics retrieved successfully', {
       stats,
       upcomingAppointments,
-      recentPatients
+      recentPatients,
+      recentLabResults
     }));
 
   } catch (error) {
@@ -99,7 +112,7 @@ exports.getPatients = async (req, res) => {
     let patientIds = await Appointment.distinct('patient', { doctor: doctorId });
 
     let query = { _id: { $in: patientIds } };
-    
+
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: 'i' } },
@@ -121,8 +134,8 @@ exports.getPatients = async (req, res) => {
           doctor: doctorId,
           patient: patient._id
         })
-        .sort({ scheduledDate: -1 })
-        .select('scheduledDate type status');
+          .sort({ scheduledDate: -1 })
+          .select('scheduledDate type status');
 
         return {
           ...patient.toObject(),
@@ -148,6 +161,8 @@ exports.getPatients = async (req, res) => {
   }
 };
 
+
+
 // @desc    Get doctor's appointments
 // @route   GET /api/doctor/appointments
 // @access  Private (Doctor only)
@@ -160,11 +175,11 @@ exports.getAppointments = async (req, res) => {
     const date = req.query.date;
 
     let query = { doctor: doctorId };
-    
+
     if (status) {
       query.status = status;
     }
-    
+
     if (date) {
       const searchDate = new Date(date);
       query.scheduledDate = {
@@ -245,11 +260,12 @@ exports.createMedicalRecord = async (req, res) => {
 exports.getPatientHistory = async (req, res) => {
   try {
     const patientId = req.params.id;
-    const [records, appointments] = await Promise.all([
+    const [records, appointments, labResults] = await Promise.all([
       MedicalRecord.find({ patient: patientId, doctor: req.user.id }).sort({ createdAt: -1 }),
-      Appointment.find({ patient: patientId, doctor: req.user.id }).sort({ scheduledDate: -1 })
+      Appointment.find({ patient: patientId, doctor: req.user.id }).sort({ scheduledDate: -1 }),
+      LabResult.find({ patient: patientId }).sort({ createdAt: -1 }) // Doctors can see all lab results for their patient
     ]);
-    res.json(formatResponse(true, 'Patient history', { records, appointments }));
+    res.json(formatResponse(true, 'Patient history', { records, appointments, labResults }));
   } catch (error) {
     console.error('Get patient history error:', error);
     res.status(500).json(formatResponse(false, 'Error retrieving history', null));
@@ -271,5 +287,48 @@ exports.prescribeMedication = async (req, res) => {
   } catch (error) {
     console.error('Prescribe medication error:', error);
     res.status(400).json(formatResponse(false, error.message, null));
+  }
+};
+
+// @desc    Get patient by ID
+// @route   GET /api/doctor/patients/:id
+// @access  Private (Doctor only)
+exports.getPatientDetails = async (req, res) => {
+  try {
+    const patient = await Patient.findById(req.params.id)
+      .select('-password');
+
+    if (!patient) {
+      return res.status(404).json(formatResponse(false, 'Patient not found', null));
+    }
+    res.status(200).json(formatResponse(true, 'Patient details retrieved', { patient }));
+  } catch (error) {
+    console.error('Get patient by ID error:', error);
+    res.status(500).json(formatResponse(false, 'Server error', null));
+  }
+};
+
+// @desc    Order a lab test
+// @route   POST /api/doctor/lab-orders
+// @access  Private (Doctor only)
+exports.orderLabTest = async (req, res) => {
+  try {
+    const { patientId, testType, testCategory, priority, notes } = req.body;
+
+    const labResult = await LabResult.create({
+      patient: patientId,
+      orderedBy: req.user.id,
+      testType,
+      testCategory,
+      priority: priority || 'routine',
+      status: 'ordered',
+      overallResult: 'inconclusive', // Placeholder
+      specimen: { condition: notes }
+    });
+
+    res.status(201).json(formatResponse(true, 'Lab test ordered successfully', { labResult }));
+  } catch (error) {
+    console.error('Order lab test error:', error);
+    res.status(500).json(formatResponse(false, error.message || 'Error ordering lab test', null));
   }
 };

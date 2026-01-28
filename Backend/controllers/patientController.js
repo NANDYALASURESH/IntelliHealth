@@ -14,7 +14,7 @@ exports.getDashboardStats = async (req, res) => {
   try {
     const patientId = req.user.id;
     const today = new Date();
-    
+
     const [
       upcomingAppointments,
       activePrescriptions,
@@ -44,8 +44,8 @@ exports.getDashboardStats = async (req, res) => {
         scheduledDate: { $gte: today },
         status: { $in: ['scheduled', 'confirmed'] }
       })
-      .populate('doctor', 'name specialization')
-      .sort({ scheduledDate: 1 }),
+        .populate('doctor', 'name specialization')
+        .sort({ scheduledDate: 1 }),
       Patient.findById(patientId)
         .select('vitalSigns healthScore primaryDoctor')
         .populate('primaryDoctor', 'name specialization department'),
@@ -54,23 +54,23 @@ exports.getDashboardStats = async (req, res) => {
         scheduledDate: { $gte: today },
         status: { $in: ['scheduled', 'confirmed'] }
       })
-      .populate('doctor', 'name specialization')
-      .sort({ scheduledDate: 1 })
-      .limit(5),
+        .populate('doctor', 'name specialization')
+        .sort({ scheduledDate: 1 })
+        .limit(5),
       Prescription.find({
         patient: patientId,
         status: 'active'
       })
-      .populate('doctor', 'name')
-      .sort({ createdAt: -1 })
-      .limit(5),
+        .populate('doctor', 'name')
+        .sort({ createdAt: -1 })
+        .limit(5),
       LabResult.find({
         patient: patientId,
         status: 'completed'
       })
-      .populate('orderedBy', 'name')
-      .sort({ createdAt: -1 })
-      .limit(5)
+        .populate('orderedBy', 'name')
+        .sort({ createdAt: -1 })
+        .limit(5)
     ]);
 
     const healthData = {
@@ -86,7 +86,10 @@ exports.getDashboardStats = async (req, res) => {
       } : null,
       vitalSigns: patient?.vitalSigns || {
         heartRate: 72,
-        bloodPressure: '120/80',
+        bloodPressure: {
+          systolic: 120,
+          diastolic: 80
+        },
         temperature: 98.6,
         weight: 70
       },
@@ -122,7 +125,7 @@ exports.getMedicalRecords = async (req, res) => {
     const type = req.query.type;
 
     let query = { patient: patientId };
-    
+
     if (type) {
       query.recordType = type;
     }
@@ -227,7 +230,7 @@ exports.getPrescriptions = async (req, res) => {
 exports.getLabResults = async (req, res) => {
   try {
     const patientId = req.user.id;
-    const items = await LabResult.find({ patient: patientId }).sort({ createdAt: -1 }).limit(50);
+    const items = await LabResult.find({ patient: patientId }).populate('orderedBy', 'name').sort({ createdAt: -1 }).limit(50);
     res.status(200).json(formatResponse(true, 'Lab results retrieved successfully', { items }));
   } catch (error) {
     console.error('Get patient lab results error:', error);

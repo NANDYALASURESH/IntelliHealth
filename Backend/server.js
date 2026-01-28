@@ -8,6 +8,12 @@ const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
+// Import models to ensure registration
+require('./models/User');
+require('./models/Patient');
+require('./models/Doctor');
+require('./models/Appointment');
+
 // Import routes
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
@@ -30,17 +36,6 @@ const app = express();
 const connectDB = require('./config/database');
 connectDB();
 
-// Security middleware
-app.use(helmet());
-app.use(compression());
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.'
-});
-app.use(limiter);
 
 // CORS configuration (allow multiple origins from env or sensible defaults)
 const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || 'http://localhost:5173,http://localhost:3000')
@@ -48,16 +43,41 @@ const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || 'ht
   .map((o) => o.trim())
   .filter(Boolean);
 
+// Ensure localhost:5173 is always allowed in dev
+if (!allowedOrigins.includes('http://localhost:5173')) {
+  allowedOrigins.push('http://localhost:5173');
+}
+
 app.use(cors({
   origin: (origin, callback) => {
+    // console.log('CORS Request from:', origin); // Debug log
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
+    console.log('CORS Blocked Origin:', origin);
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
+
+// Handle preflight requests explicitly
+app.options('*', cors());
+
+// Security middleware
+app.use(helmet());
+app.use(compression());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 1000, // limit each IP to 1000 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.'
+});
+app.use(limiter);
 
 
 // Body parsing middleware
@@ -120,14 +140,14 @@ const io = require('socket.io')(server, {
 // Socket connection handling
 io.on('connection', (socket) => {
   logger.info(`User connected: ${socket.id}`);
-  
+
   // Join user to their role-specific room
   socket.on('join', (userData) => {
     socket.join(`user_${userData.userId}`);
     socket.join(`role_${userData.role}`);
     logger.info(`User ${userData.userId} joined role room: ${userData.role}`);
   });
-  
+
   socket.on('disconnect', () => {
     logger.info(`User disconnected: ${socket.id}`);
   });

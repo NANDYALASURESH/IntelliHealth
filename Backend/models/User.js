@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please provide a valid email']
   },
-    gender: {
+  gender: {
     type: String,
     enum: ['male', 'female', 'other'],
     required: [true, 'Gender is required']
@@ -41,8 +41,8 @@ const userSchema = new mongoose.Schema({
     type: Date
   },
   emergencyContact: {
-    name: { type: String, required: true },
-    phone: { type: String, required: true },
+    name: String,
+    phone: String,
     relationship: String
   },
   avatar: {
@@ -79,47 +79,47 @@ const userSchema = new mongoose.Schema({
 });
 
 // Virtual for account lock status
-userSchema.virtual('isLocked').get(function() {
+userSchema.virtual('isLocked').get(function () {
   return !!(this.lockUntil && this.lockUntil > Date.now());
 });
 
 // Pre-save middleware to hash password
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-  
+
   const salt = await bcrypt.genSalt(12);
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 
 // Method to compare password
-userSchema.methods.comparePassword = async function(candidatePassword) {
+userSchema.methods.comparePassword = async function (candidatePassword) {
   if (!this.password) return false;
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
 // Method to handle login attempts
-userSchema.methods.incLoginAttempts = function() {
+userSchema.methods.incLoginAttempts = function () {
   if (this.lockUntil && this.lockUntil < Date.now()) {
     return this.updateOne({
       $unset: { lockUntil: 1 },
       $set: { loginAttempts: 1 }
     });
   }
-  
+
   const updates = { $inc: { loginAttempts: 1 } };
-  
+
   if (this.loginAttempts + 1 >= 5 && !this.isLocked) {
     updates.$set = {
       lockUntil: Date.now() + 30 * 60 * 1000 // 30 minutes
     };
   }
-  
+
   return this.updateOne(updates);
 };
 
 // Reset login attempts on successful login
-userSchema.methods.resetLoginAttempts = function() {
+userSchema.methods.resetLoginAttempts = function () {
   return this.updateOne({
     $unset: {
       loginAttempts: 1,

@@ -6,7 +6,7 @@ import { adminApi } from '../services/api';
 
 import {
   Users, FileText, Calendar, Settings, LogOut, Activity,
-  BarChart2, User, Shield, Heart, Stethoscope,
+  BarChart2, User, Shield, Heart, Stethoscope, Pill,
   TestTube, BookOpen, AlertCircle, Clock, ChevronRight
 } from 'lucide-react';
 
@@ -37,6 +37,7 @@ const Sidebar = () => {
       { icon: Heart, label: 'Health Overview', path: '/patient-dashboard', color: 'text-red-500' },
       { icon: Calendar, label: 'My Appointments', path: '/patient/appointments', color: 'text-blue-600' },
       { icon: FileText, label: 'Medical Records', path: '/patient/records', color: 'text-green-600' },
+      { icon: Pill, label: 'My Prescriptions', path: '/patient/prescriptions', color: 'text-orange-600' },
       { icon: TestTube, label: 'Lab Results', path: '/patient/lab-results', color: 'text-purple-600' },
       { icon: User, label: 'Profile', path: '/patient/profile', color: 'text-gray-600' }
     ],
@@ -108,21 +109,19 @@ const Sidebar = () => {
             <button
               key={item.path}
               onClick={() => handleNavigation(item.path)}
-              className={`w-full group flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
-                isActive(item.path)
-                  ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-              }`}
+              className={`w-full group flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${isActive(item.path)
+                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
+                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                }`}
             >
               <div className="flex items-center space-x-3">
                 <item.icon className={`w-5 h-5 ${isActive(item.path) ? 'text-white' : item.color}`} />
                 <span>{item.label}</span>
               </div>
-              <ChevronRight className={`w-4 h-4 transition-transform duration-200 ${
-                isActive(item.path) 
-                  ? 'text-white transform rotate-90' 
-                  : 'text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1'
-              }`} />
+              <ChevronRight className={`w-4 h-4 transition-transform duration-200 ${isActive(item.path)
+                ? 'text-white transform rotate-90'
+                : 'text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1'
+                }`} />
             </button>
           ))}
         </div>
@@ -134,7 +133,7 @@ const Sidebar = () => {
           </h3>
           <div className="space-y-2">
             {user?.role === 'admin' && (
-              <button 
+              <button
                 onClick={() => handleQuickAction('addUser')}
                 className="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors"
               >

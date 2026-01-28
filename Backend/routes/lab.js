@@ -6,7 +6,9 @@ const {
   updateTestStatus,
   uploadTestResult,
   getPendingTests,
-  getEquipmentStatus
+  getEquipmentStatus,
+  completeLabTest,
+  recordSpecimen
 } = require('../controllers/labController');
 const { protect, authorize } = require('../middleware/auth');
 
@@ -28,6 +30,12 @@ router.patch('/test-results/:id/status', updateTestStatus);
 
 // @route   POST /api/lab/test-results/:id/upload
 router.post('/test-results/:id/upload', uploadTestResult);
+
+// @route   POST /api/lab/test-results/:id/complete
+router.post('/test-results/:id/complete', completeLabTest);
+
+// @route   PATCH /api/lab/test-results/:id/specimen
+router.patch('/test-results/:id/specimen', recordSpecimen);
 
 // @route   GET /api/lab/equipment-status
 router.get('/equipment-status', getEquipmentStatus);

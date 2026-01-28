@@ -80,7 +80,11 @@ export default function LoginForm() {
     setIsSubmitting(true);
     try {
       console.log('Submitting form:', formData);
-      const response = await login(formData); // Use login from AuthContext
+      // Only send email and password, not role
+      const response = await login({
+        email: formData.email,
+        password: formData.password
+      });
       console.log('Login response:', response);
 
       // Store role in cookies for persistence
@@ -143,11 +147,10 @@ export default function LoginForm() {
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`w-full pl-12 pr-4 py-3 border rounded-xl bg-gray-50/50 hover:bg-white focus:outline-none focus:ring-2 transition-all duration-200 ${
-                  errors.email
+                className={`w-full pl-12 pr-4 py-3 border rounded-xl bg-gray-50/50 hover:bg-white focus:outline-none focus:ring-2 transition-all duration-200 ${errors.email
                     ? 'border-red-300 focus:ring-red-500/30 focus:border-red-500'
                     : 'border-gray-200 focus:ring-indigo-500/30 focus:border-indigo-500 focus:bg-white'
-                }`}
+                  }`}
                 placeholder="Enter your email"
               />
             </div>
@@ -165,11 +168,10 @@ export default function LoginForm() {
                 type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={handleInputChange}
-                className={`w-full pl-12 pr-12 py-3 border rounded-xl bg-gray-50/50 hover:bg-white focus:outline-none focus:ring-2 transition-all duration-200 ${
-                  errors.password
+                className={`w-full pl-12 pr-12 py-3 border rounded-xl bg-gray-50/50 hover:bg-white focus:outline-none focus:ring-2 transition-all duration-200 ${errors.password
                     ? 'border-red-300 focus:ring-red-500/30 focus:border-red-500'
                     : 'border-gray-200 focus:ring-indigo-500/30 focus:border-indigo-500 focus:bg-white'
-                }`}
+                  }`}
                 placeholder="Enter your password"
               />
               <button
@@ -208,11 +210,10 @@ export default function LoginForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full py-3 px-4 rounded-xl font-semibold text-white transition-all duration-200 ${
-              isSubmitting
+            className={`w-full py-3 px-4 rounded-xl font-semibold text-white transition-all duration-200 ${isSubmitting
                 ? 'bg-gray-400 cursor-not-allowed scale-95'
                 : 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 hover:scale-105 focus:ring-4 focus:ring-indigo-500/30 shadow-lg hover:shadow-xl'
-            }`}
+              }`}
           >
             {isSubmitting ? (
               <div className="flex items-center justify-center space-x-2">

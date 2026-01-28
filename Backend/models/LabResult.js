@@ -25,7 +25,7 @@ const labResultSchema = new mongoose.Schema({
     required: [true, 'Test category is required']
   },
   specimen: {
-    type: String,
+    type: { type: String },
     collectionDate: Date,
     collectionTime: String,
     collectedBy: String,
@@ -93,14 +93,14 @@ labResultSchema.index({ orderedBy: 1, status: 1 });
 labResultSchema.index({ status: 1, priority: 1 });
 
 // Pre-save middleware to check for abnormal/critical results
-labResultSchema.pre('save', function(next) {
+labResultSchema.pre('save', function (next) {
   // Check if any parameter is flagged as high, low, or critical
-  this.isAbnormal = this.testParameters.some(param => 
+  this.isAbnormal = this.testParameters.some(param =>
     param.flag === 'high' || param.flag === 'low' || param.flag === 'critical'
   );
-  
+
   this.isCritical = this.testParameters.some(param => param.flag === 'critical');
-  
+
   next();
 });
 

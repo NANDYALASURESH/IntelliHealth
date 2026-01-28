@@ -35,17 +35,17 @@ exports.getDashboardStats = async (req, res) => {
       LabResult.find({
         status: { $in: ['ordered', 'collected', 'processing'] }
       })
-      .populate('patient', 'name')
-      .populate('orderedBy', 'name')
-      .sort({ priority: 1, createdAt: 1 })
-      .limit(10),
+        .populate('patient', 'name')
+        .populate('orderedBy', 'name')
+        .sort({ priority: 1, createdAt: 1 })
+        .limit(10),
       LabResult.find({
         status: 'completed',
         reportDate: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
       })
-      .populate('patient', 'name')
-      .sort({ reportDate: -1 })
-      .limit(5),
+        .populate('patient', 'name')
+        .sort({ reportDate: -1 })
+        .limit(5),
       LabResult.countDocuments({
         createdAt: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) }
       })
@@ -92,15 +92,15 @@ exports.getTestResults = async (req, res) => {
     const search = req.query.search;
 
     let query = {};
-    
+
     if (status) query.status = status;
     if (priority) query.priority = priority;
-    
+
     if (search) {
       const patients = await Patient.find({
         name: { $regex: search, $options: 'i' }
       }).select('_id');
-      
+
       query.$or = [
         { testType: { $regex: search, $options: 'i' } },
         { patient: { $in: patients.map(p => p._id) } }
@@ -196,5 +196,69 @@ exports.getEquipmentStatus = async (req, res) => {
     res.json(formatResponse(true, 'Equipment status', { equipment }));
   } catch (error) {
     res.status(500).json(formatResponse(false, 'Error retrieving equipment status', null));
+  }
+};
+
+
+// @desc    Record specimen details
+// @route   PATCH /api/lab/test-results/:id/specimen
+// @access  Private (Lab only)
+exports.recordSpecimen = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { type, volume, condition, collectedBy } = req.body;
+
+    const result = await LabResult.findByIdAndUpdate(
+      id,
+      {
+        specimen: {
+          type,
+          volume,
+          condition,
+          collectedBy,
+          collectionDate: new Date(),
+          collectionTime: new Date().toLocaleTimeString()
+        },
+        status: 'collected'
+      },
+      { new: true }
+    );
+
+    if (!result) return res.status(404).json(formatResponse(false, 'Lab result not found', null));
+    res.json(formatResponse(true, 'Specimen details recorded', { result }));
+  } catch (error) {
+    console.error('Record specimen error:', error);
+    res.status(500).json(formatResponse(false, 'Error recording specimen details', null));
+  }
+};
+
+// @desc    Complete lab test with results
+// @route   POST /api/lab/test-results/:id/complete
+// @access  Private (Lab only)
+exports.completeLabTest = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { testParameters, overallResult, interpretation, isAbnormal, isCritical } = req.body;
+
+    const result = await LabResult.findByIdAndUpdate(
+      id,
+      {
+        testParameters,
+        overallResult,
+        interpretation,
+        isAbnormal,
+        isCritical,
+        status: 'completed',
+        reportDate: new Date(),
+        labTechnician: req.user.id
+      },
+      { new: true }
+    );
+
+    if (!result) return res.status(404).json(formatResponse(false, 'Lab result not found', null));
+    res.json(formatResponse(true, 'Lab test completed', { result }));
+  } catch (error) {
+    console.error('Complete lab test error:', error);
+    res.status(500).json(formatResponse(false, error.message || 'Error completing lab test', null));
   }
 };

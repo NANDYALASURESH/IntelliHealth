@@ -32,8 +32,8 @@ const appointmentSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['scheduled', 'confirmed', 'in-progress', 'completed', 'cancelled', 'no-show'],
-    default: 'scheduled'
+    enum: ['pending', 'scheduled', 'confirmed', 'in-progress', 'completed', 'cancelled', 'no-show'],
+    default: 'pending'
   },
   priority: {
     type: String,
@@ -82,7 +82,7 @@ appointmentSchema.index({ patient: 1, scheduledDate: -1 });
 appointmentSchema.index({ status: 1, scheduledDate: 1 });
 
 // Virtual for appointment date-time
-appointmentSchema.virtual('appointmentDateTime').get(function() {
+appointmentSchema.virtual('appointmentDateTime').get(function () {
   if (!this.scheduledDate || !this.scheduledTime) return null;
   const [hours, minutes] = this.scheduledTime.split(':');
   const dateTime = new Date(this.scheduledDate);

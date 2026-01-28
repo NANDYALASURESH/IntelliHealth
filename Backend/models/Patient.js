@@ -91,18 +91,18 @@ const patientSchema = new mongoose.Schema({
 });
 
 // Calculate age from date of birth
-patientSchema.virtual('age').get(function() {
+patientSchema.virtual('age').get(function () {
   if (!this.dateOfBirth) return null;
   return Math.floor((new Date() - this.dateOfBirth) / (365.25 * 24 * 60 * 60 * 1000));
 });
 
 // Calculate BMI
-patientSchema.virtual('bmi').get(function() {
+patientSchema.virtual('bmi').get(function () {
   if (!this.vitalSigns?.height || !this.vitalSigns?.weight) return null;
   const heightInM = this.vitalSigns.height / 100;
   return (this.vitalSigns.weight / (heightInM * heightInM)).toFixed(1);
 });
 
-const Patient = User.discriminator('patient', patientSchema);
+const Patient = User.discriminator('Patient', patientSchema, 'patient');
 
 module.exports = Patient;

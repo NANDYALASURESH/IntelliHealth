@@ -1,8 +1,8 @@
 // src/services/api.js
+import Cookies from 'js-cookie';
 
 const DEFAULT_API_BASE = 'http://localhost:5000/api';
-export const API_BASE_URL = import.meta?.env?.VITE_API_URL || DEFAULT_API_BASE;
-import Cookies from 'js-cookie';
+export const API_BASE_URL = import.meta?.env?.VITE_API_BASE_URL || DEFAULT_API_BASE;
 
 export function getAuthToken() {
   return Cookies.get('token') || '';
@@ -11,6 +11,24 @@ export function getAuthToken() {
 export function setAuthSession(user, token) {
   if (token) Cookies.set('token', token);
   if (user) Cookies.set('user', JSON.stringify(user));
+}
+
+const getHeaders = () => {
+  const token = getAuthToken();
+  return {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  };
+};
+
+// Helper to handle 401 and redirect
+function handleAuthError() {
+  Cookies.remove('token');
+  Cookies.remove('user');
+  Cookies.remove('role');
+  if (window.location.pathname !== '/login') {
+    window.location.href = '/login';
+  }
 }
 
 export async function apiRequest(path, options = {}) {
@@ -30,6 +48,11 @@ export async function apiRequest(path, options = {}) {
     credentials: 'include',
   });
 
+  if (response.status === 401 && !path.includes('/auth/login')) {
+    handleAuthError();
+    throw new Error('Session expired');
+  }
+
   let data;
   try {
     data = await response.json();
@@ -45,51 +68,63 @@ export async function apiRequest(path, options = {}) {
   return data;
 }
 
-const BASE_URL = 'http://localhost:5000/api';
-
-const getHeaders = () => {
-  const token = Cookies.get('token');
-  return {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  };
+export const adminApi = {
+  getDashboardStats: () => apiRequest('/admin/dashboard-stats'),
+  addUser: (userData) => apiRequest('/admin/users', { method: 'POST', body: JSON.stringify(userData) }),
+  getUsers: () => apiRequest('/admin/users'),
 };
 
-export const adminApi = {
-  getDashboardStats: async () => {
-    const response = await fetch(`${BASE_URL}/admin/dashboard-stats`, {
-      headers: getHeaders(),
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to fetch dashboard stats');
-    }
-    return response.json();
-  },
+export const doctorApi = {
+  getDashboardStats: () => apiRequest('/doctor/dashboard-stats'),
+  getPatients: () => apiRequest('/doctor/patients'),
+  getPatientById: (id) => apiRequest(`/doctor/patients/${id}`),
+  getAppointments: () => apiRequest('/doctor/appointments'),
+  updateAppointmentStatus: (id, status) => apiRequest(`/doctor/appointments/${id}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status })
+  }),
+  createPrescription: (data) => apiRequest('/prescriptions', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }),
+  createMedicalRecord: (data) => apiRequest('/medical-records', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }),
+  getPatientPrescriptions: (patientId) => apiRequest(`/prescriptions/patient/${patientId}`),
+  getPatientPrescriptions: (patientId) => apiRequest(`/prescriptions/patient/${patientId}`),
+  getPatientRecords: (patientId) => apiRequest(`/medical-records/patient/${patientId}`),
+  getPatientHistory: (patientId) => apiRequest(`/doctor/patients/${patientId}/history`),
+  orderLabTest: (data) => apiRequest('/doctor/lab-orders', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  })
+};
 
-  addUser: async (userData) => {
-    const response = await fetch(`${BASE_URL}/admin/users`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(userData),
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to add user');
-    }
-    return response.json();
+export const labApi = {
+  getDashboardStats: () => apiRequest('/lab/dashboard-stats'),
+  getTestResults: (params) => {
+    const queryString = new URLSearchParams(params).toString();
+    return apiRequest(`/lab/test-results?${queryString}`);
   },
-
-  getUsers: async () => {
-    const response = await fetch(`${BASE_URL}/admin/users`, {
-      headers: getHeaders(),
-    });
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to fetch users');
-    }
-    return response.json();
-  },
+  updateTestStatus: (id, status) => apiRequest(`/lab/test-results/${id}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status })
+  }),
+  uploadTestResult: (id, reportUrl) => apiRequest(`/lab/test-results/${id}/upload`, {
+    method: 'POST',
+    body: JSON.stringify({ reportUrl })
+  }),
+  getPendingTests: () => apiRequest('/lab/pending-tests'),
+  getEquipmentStatus: () => apiRequest('/lab/equipment-status'),
+  completeLabTest: (id, data) => apiRequest(`/lab/test-results/${id}/complete`, {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }),
+  recordSpecimen: (id, data) => apiRequest(`/lab/test-results/${id}/specimen`, {
+    method: 'PATCH',
+    body: JSON.stringify(data)
+  })
 };
 
 

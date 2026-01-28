@@ -73,11 +73,11 @@ const doctorSchema = new mongoose.Schema({
 });
 
 // Virtual for total patients
-doctorSchema.virtual('totalPatients').get(function() {
+doctorSchema.virtual('totalPatients').get(function () {
   return this.patients?.length || 0;
 });
 
 // Create discriminator
-const Doctor = User.discriminator('doctor', doctorSchema);
+const Doctor = User.discriminator('Doctor', doctorSchema, 'doctor');
 
 module.exports = Doctor;

@@ -1,3 +1,18 @@
+Role	Email	Password
+Admin	
+admin@intellihealth.com
+Admin123!
+Doctor	
+doctor@intellihealth.com
+Doctor123!
+Patient	
+patient@intellihealth.com
+Patient123!
+Lab	
+lab@intellihealth.com
+Lab123!
+s
+
 ## IntelliHealth Backend
 
 Express + MongoDB (Mongoose) API with JWT auth, role-based access, email, file uploads, and Socket.IO notifications.

@@ -20,16 +20,18 @@ const sampleUsers = {
     email: 'admin@intellihealth.com',
     password: 'Admin123!',
     role: 'admin',
+    gender: 'male',
     isActive: true,
     isEmailVerified: true
   },
-  
+
   doctors: [
     {
       name: 'Dr. Sarah Wilson',
       email: 'sarah.wilson@intellihealth.com',
       password: 'Doctor123!',
       role: 'doctor',
+      gender: 'female',
       specialization: 'Cardiology',
       licenseNumber: 'MD001234',
       experience: 8,
@@ -52,6 +54,7 @@ const sampleUsers = {
       email: 'mike.johnson@intellihealth.com',
       password: 'Doctor123!',
       role: 'doctor',
+      gender: 'male',
       specialization: 'Dermatology',
       licenseNumber: 'MD001235',
       experience: 12,
@@ -74,6 +77,7 @@ const sampleUsers = {
       email: 'emily.davis@intellihealth.com',
       password: 'Doctor123!',
       role: 'doctor',
+      gender: 'female',
       specialization: 'General Medicine',
       licenseNumber: 'MD001236',
       experience: 6,
@@ -92,7 +96,7 @@ const sampleUsers = {
       isEmailVerified: true
     }
   ],
-  
+
   patients: [
     {
       name: 'John Doe',
@@ -159,12 +163,13 @@ const sampleUsers = {
       isEmailVerified: true
     }
   ],
-  
+
   labTechnician: {
     name: 'Lab Technician',
     email: 'lab@intellihealth.com',
     password: 'Lab123!',
     role: 'lab',
+    gender: 'male',
     isActive: true,
     isEmailVerified: true
   }
@@ -173,10 +178,10 @@ const sampleUsers = {
 const seedDatabase = async () => {
   try {
     console.log('🌱 Starting database seeding...');
-    
+
     // Connect to database
     await connectDB();
-    
+
     // Clear existing data
     console.log('🗑️  Clearing existing data...');
     await Promise.all([
@@ -185,12 +190,12 @@ const seedDatabase = async () => {
       MedicalRecord.deleteMany({}),
       LabResult.deleteMany({})
     ]);
-    
+
     // Create admin user
     console.log('👤 Creating admin user...');
     const adminUser = new User(sampleUsers.admin);
     await adminUser.save();
-    
+
     // Create doctors
     console.log('👨‍⚕️ Creating doctors...');
     const doctors = [];
@@ -199,7 +204,7 @@ const seedDatabase = async () => {
       await doctor.save();
       doctors.push(doctor);
     }
-    
+
     // Create patients
     console.log('🤒 Creating patients...');
     const patients = [];
@@ -208,15 +213,33 @@ const seedDatabase = async () => {
       await patient.save();
       patients.push(patient);
     }
-    
+
     // Create lab technician
     console.log('🔬 Creating lab technician...');
     const labUser = new User(sampleUsers.labTechnician);
     await labUser.save();
-    
+
     // Create sample appointments
     console.log('📅 Creating sample appointments...');
     const appointments = [
+      {
+        patient: patients[0]._id,
+        doctor: doctors[0]._id, // Dr. Sarah Wilson
+        scheduledDate: new Date(), // TODAY
+        scheduledTime: '11:00',
+        type: 'consultation',
+        status: 'confirmed',
+        reasonForVisit: 'Emergency heart palpitations'
+      },
+      {
+        patient: patients[1]._id,
+        doctor: doctors[0]._id, // Dr. Sarah Wilson
+        scheduledDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // Tomorrow
+        scheduledTime: '09:00',
+        type: 'check-up',
+        status: 'pending', // Pending request
+        reasonForVisit: 'General check-up request'
+      },
       {
         patient: patients[0]._id,
         doctor: doctors[0]._id,
@@ -245,12 +268,12 @@ const seedDatabase = async () => {
         reasonForVisit: 'Follow-up for previous diagnosis'
       }
     ];
-    
+
     for (const appointmentData of appointments) {
       const appointment = new Appointment(appointmentData);
       await appointment.save();
     }
-    
+
     // Create sample lab results
     console.log('🧪 Creating sample lab results...');
     const labResults = [
@@ -287,12 +310,12 @@ const seedDatabase = async () => {
         reportDate: new Date()
       }
     ];
-    
+
     for (const labData of labResults) {
       const labResult = new LabResult(labData);
       await labResult.save();
     }
-    
+
     console.log('✅ Database seeding completed successfully!');
     console.log('\n📊 Created:');
     console.log(`   - 1 Admin user`);
@@ -301,17 +324,17 @@ const seedDatabase = async () => {
     console.log(`   - 1 Lab technician`);
     console.log(`   - ${appointments.length} Appointments`);
     console.log(`   - ${labResults.length} Lab results`);
-    
+
     console.log('\n🔑 Login Credentials:');
     console.log('   Admin: admin@intellihealth.com / Admin123!');
     console.log('   Doctor: sarah.wilson@intellihealth.com / Doctor123!');
     console.log('   Patient: john.doe@example.com / Patient123!');
     console.log('   Lab: lab@intellihealth.com / Lab123!');
-    
+
     process.exit(0);
-    
+
   } catch (error) {
-    console.error('❌ Error seeding database:', error);
+    console.error('❌ Error seeding database:', JSON.stringify(error, null, 2));
     process.exit(1);
   }
 };

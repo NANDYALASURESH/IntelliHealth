@@ -23,6 +23,7 @@ const PatientDashboard = () => {
   const [appointments, setAppointments] = useState([]);
   const [prescriptions, setPrescriptions] = useState([]);
   const [labResults, setLabResults] = useState([]);
+  const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showBookModal, setShowBookModal] = useState(false);
   const [booking, setBooking] = useState({
@@ -37,13 +38,20 @@ const PatientDashboard = () => {
   useEffect(() => {
     const fetchPatientData = async () => {
       try {
-        const res = await apiRequest('/patient/dashboard-stats');
+        const [dashboardRes, doctorsRes] = await Promise.all([
+          apiRequest('/patient/dashboard-stats'),
+          apiRequest('/patient/doctors')
+        ]);
+        const res = dashboardRes;
         const payload = res?.data || res;
 
         if (payload?.healthData) setHealthData(payload.healthData);
         if (payload?.appointments) setAppointments(payload.appointments);
         if (payload?.prescriptions) setPrescriptions(payload.prescriptions);
         if (payload?.labResults) setLabResults(payload.labResults);
+
+        const doctorsData = doctorsRes?.data || doctorsRes;
+        if (doctorsData?.doctors) setDoctors(doctorsData.doctors);
       } catch (error) {
         toast.error(error.message || 'Failed to load patient data');
       } finally {
@@ -81,12 +89,19 @@ const PatientDashboard = () => {
       handleCloseBook();
       // Refresh dashboard data
       setLoading(true);
-      const res = await apiRequest('/patient/dashboard-stats');
+      const [dashboardRes, doctorsRes] = await Promise.all([
+        apiRequest('/patient/dashboard-stats'),
+        apiRequest('/patient/doctors')
+      ]);
+      const res = dashboardRes;
       const payload = res?.data || res;
       if (payload?.healthData) setHealthData(payload.healthData);
       if (payload?.appointments) setAppointments(payload.appointments);
       if (payload?.prescriptions) setPrescriptions(payload.prescriptions);
       if (payload?.labResults) setLabResults(payload.labResults);
+
+      const doctorsData = doctorsRes?.data || doctorsRes;
+      if (doctorsData?.doctors) setDoctors(doctorsData.doctors);
     } catch (error) {
       toast.error(error.message || 'Failed to book appointment');
     } finally {
@@ -112,53 +127,53 @@ const PatientDashboard = () => {
 
   // Add this inside your PatientDashboard.jsx or in a separate file and import it
 
-const StatCard = ({ icon, label, count, badge }) => {
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center space-x-4">
-      <div className="text-3xl">{icon}</div>
-      <div>
-        <p className="text-lg font-semibold text-gray-900">{count}</p>
-        <p className="text-sm text-gray-500">{label}</p>
-        {badge && (
-          <span className="inline-block mt-1 text-xs font-medium bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
-            {badge}
-          </span>
-        )}
+  const StatCard = ({ icon, label, count, badge }) => {
+    return (
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center space-x-4">
+        <div className="text-3xl">{icon}</div>
+        <div>
+          <p className="text-lg font-semibold text-gray-900">{count}</p>
+          <p className="text-sm text-gray-500">{label}</p>
+          {badge && (
+            <span className="inline-block mt-1 text-xs font-medium bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+              {badge}
+            </span>
+          )}
+        </div>
       </div>
-    </div>
-  );
-};
-const VitalSignsCard = ({ vitals }) => {
-  const bp = vitals?.bloodPressure;
-  const bpText = typeof bp === 'object' && bp !== null
-    ? `${bp?.systolic ?? '-'} / ${bp?.diastolic ?? '-'}`
-    : (bp ?? '—');
+    );
+  };
+  const VitalSignsCard = ({ vitals }) => {
+    const bp = vitals?.bloodPressure;
+    const bpText = typeof bp === 'object' && bp !== null
+      ? `${bp?.systolic ?? '-'} / ${bp?.diastolic ?? '-'}`
+      : (bp ?? '—');
 
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <h3 className="text-lg font-semibold mb-4">Vital Signs</h3>
-      <ul className="space-y-2 text-gray-700">
-        <li><strong>Heart Rate:</strong> {vitals?.heartRate ?? '—'} BPM</li>
-        <li><strong>Blood Pressure:</strong> {bpText}</li>
-        <li><strong>Temperature:</strong> {vitals?.temperature ?? '—'}</li>
-        <li><strong>Weight:</strong> {vitals?.weight ?? '—'}</li>
-      </ul>
-    </div>
-  );
-};
-const QuickActions = () => {
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
-      <button className="w-full py-2 px-4 mb-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-        Request Prescription Refill
-      </button>
-      <button className="w-full py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700 transition">
-        Contact Doctor
-      </button>
-    </div>
-  );
-};
+    return (
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h3 className="text-lg font-semibold mb-4">Vital Signs</h3>
+        <ul className="space-y-2 text-gray-700">
+          <li><strong>Heart Rate:</strong> {vitals?.heartRate ?? '—'} BPM</li>
+          <li><strong>Blood Pressure:</strong> {bpText}</li>
+          <li><strong>Temperature:</strong> {vitals?.temperature ?? '—'}</li>
+          <li><strong>Weight:</strong> {vitals?.weight ?? '—'}</li>
+        </ul>
+      </div>
+    );
+  };
+  const QuickActions = () => {
+    return (
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+        <button className="w-full py-2 px-4 mb-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+          Request Prescription Refill
+        </button>
+        <button className="w-full py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700 transition">
+          Contact Doctor
+        </button>
+      </div>
+    );
+  };
 
 
   return (
@@ -190,8 +205,15 @@ const QuickActions = () => {
             </div>
             <form onSubmit={submitBooking} className="p-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Doctor ID (Mongo ObjectId)</label>
-                <input name="doctor" value={booking.doctor} onChange={handleBookChange} className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="e.g. 64f1b1c2d3e4f5a6b7c8d9e0" />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Select Doctor *</label>
+                <select name="doctor" value={booking.doctor} onChange={handleBookChange} className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                  <option value="">Choose a doctor...</option>
+                  {doctors.map((doc) => (
+                    <option key={doc._id} value={doc._id}>
+                      Dr. {doc.name} - {doc.specialization}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -252,9 +274,13 @@ const QuickActions = () => {
                   <User className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">{healthData.nextAppointment.doctor}</p>
+                  <p className="font-medium text-gray-900">
+                    {typeof healthData.nextAppointment.doctor === 'object'
+                      ? `Dr. ${healthData.nextAppointment.doctor?.name}`
+                      : healthData.nextAppointment.doctor}
+                  </p>
                   <p className="text-sm text-gray-600">
-                    {healthData.nextAppointment.date} at {healthData.nextAppointment.time}
+                    {new Date(healthData.nextAppointment.scheduledDate).toLocaleDateString()} at {healthData.nextAppointment.scheduledTime}
                   </p>
                 </div>
               </div>
@@ -284,22 +310,57 @@ const QuickActions = () => {
           </h2>
           <div className="space-y-4">
             {appointments.map((a) => (
-              <div key={a.id} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition-colors border border-gray-100">
+              <div key={a._id} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition-colors border border-gray-100">
                 <div className="flex items-center space-x-3">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                     <User className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">{a.doctor}</p>
-                    <p className="text-sm text-gray-500">{a.specialty} • {a.type}</p>
+                    <p className="font-medium text-gray-900">Dr. {a.doctor?.name || 'Unknown'}</p>
+                    <p className="text-sm text-gray-500">{a.doctor?.specialization || 'General'} • {a.type}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium text-gray-900">{a.date}</p>
-                  <p className="text-sm text-gray-500">{a.time}</p>
+                  <p className="font-medium text-gray-900">{new Date(a.scheduledDate).toLocaleDateString()}</p>
+                  <p className="text-sm text-gray-500">{a.scheduledTime}</p>
                 </div>
               </div>
             ))}
+            {appointments.length === 0 && (
+              <p className="text-gray-500 text-center py-4">No upcoming appointments</p>
+            )}
+          </div>
+        </div>
+
+        {/* Recent Lab Results */}
+        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <Activity className="w-5 h-5 mr-2 text-purple-600" />
+            Recent Lab Reports
+          </h2>
+          <div className="space-y-4">
+            {labResults.map((result) => (
+              <div key={result._id} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg transition-colors border border-gray-100">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <Activity className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">{result.testType}</p>
+                    <p className="text-sm text-gray-500">Ordered by Dr. {result.orderedBy?.name || 'Physician'}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className={`text-sm font-bold ${result.overallResult === 'normal' ? 'text-green-600' : 'text-red-600'}`}>
+                    {result.overallResult?.toUpperCase() || 'COMPLETED'}
+                  </p>
+                  <p className="text-xs text-gray-500">{new Date(result.reportDate || result.updatedAt).toLocaleDateString()}</p>
+                </div>
+              </div>
+            ))}
+            {labResults.length === 0 && (
+              <p className="text-gray-500 text-center py-4">No recent lab reports</p>
+            )}
           </div>
         </div>
 
@@ -314,3 +375,7 @@ const QuickActions = () => {
 };
 
 export default PatientDashboard;
+
+
+
+

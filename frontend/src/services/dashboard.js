@@ -8,13 +8,14 @@ export const dashboardAPI = {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
-      }
+      },
+      credentials: 'include'
     });
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch dashboard stats');
     }
-    
+
     return response.json();
   },
 

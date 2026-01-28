@@ -88,7 +88,8 @@ const prescriptionSchema = new mongoose.Schema({
 });
 
 // Generate prescription number before saving
-prescriptionSchema.pre('save', async function(next) {
+// Generate prescription number before validation
+prescriptionSchema.pre('validate', async function (next) {
   if (!this.prescriptionNumber) {
     const count = await mongoose.model('Prescription').countDocuments();
     this.prescriptionNumber = `RX${Date.now()}${(count + 1).toString().padStart(4, '0')}`;

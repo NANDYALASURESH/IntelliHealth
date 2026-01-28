@@ -6,10 +6,21 @@ const { formatResponse } = require('../utils/responseFormatter');
 
 router.use(protect);
 
-router.get('/', async (req, res) => {
-  const items = await Prescription.find().limit(50);
-  res.json(formatResponse(true, 'Prescriptions', { items }));
-});
+const {
+  createPrescription,
+  getPrescriptionsByPatient,
+  getMyPrescriptions,
+  getPrescriptionsByDoctor,
+  getPrescriptionById
+} = require('../controllers/prescriptionController');
+
+router.use(protect);
+
+router.post('/', createPrescription);
+router.get('/my', getMyPrescriptions);
+router.get('/doctor/me', getPrescriptionsByDoctor);
+router.get('/patient/:patientId', getPrescriptionsByPatient);
+router.get('/:id', getPrescriptionById);
 
 module.exports = router;
 

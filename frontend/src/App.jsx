@@ -9,7 +9,14 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import DoctorDashboard from "./pages/DoctorDashboard";
+import DoctorAppointments from "./pages/DoctorAppointments";
+import DoctorPatients from "./pages/DoctorPatients";
 import PatientDashboard from "./pages/PatientDashboard";
+import MyPrescriptions from "./pages/MyPrescriptions";
+import MyLabResults from "./pages/MyLabResults";
+import MyAppointments from "./pages/MyAppointments";
+import MedicalRecords from "./pages/MedicalRecords";
+import PatientProfile from "./pages/PatientProfile";
 import LabDashboard from "./pages/LabDashboard";
 
 const App = () => {
@@ -58,11 +65,103 @@ const App = () => {
           />
 
           <Route
-            path="/patient/dashboard"
+            path="/doctor/appointments"
+            element={
+              <ProtectedRoute allowedRoles={["doctor"]}>
+                <MainLayout>
+                  <DoctorAppointments />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/doctor/patients"
+            element={
+              <ProtectedRoute allowedRoles={["doctor"]}>
+                <MainLayout>
+                  <DoctorPatients />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/doctor/*"
+            element={
+              <ProtectedRoute allowedRoles={["doctor"]}>
+                <MainLayout>
+                  <div className="p-6 text-center">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Feature Under Development</h2>
+                    <p className="text-gray-600">This feature will be available soon</p>
+                  </div>
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Patient Routes */}
+          <Route
+            path="/patient-dashboard"
             element={
               <ProtectedRoute allowedRoles={["patient"]}>
                 <MainLayout>
                   <PatientDashboard />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/patient/appointments"
+            element={
+              <ProtectedRoute allowedRoles={["patient"]}>
+                <MainLayout>
+                  <MyAppointments />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/patient/records"
+            element={
+              <ProtectedRoute allowedRoles={["patient"]}>
+                <MainLayout>
+                  <MedicalRecords />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/patient/prescriptions"
+            element={
+              <ProtectedRoute allowedRoles={["patient"]}>
+                <MainLayout>
+                  <MyPrescriptions />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/patient/lab-results"
+            element={
+              <ProtectedRoute allowedRoles={["patient"]}>
+                <MainLayout>
+                  <MyLabResults />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/patient/profile"
+            element={
+              <ProtectedRoute allowedRoles={["patient"]}>
+                <MainLayout>
+                  <PatientProfile />
                 </MainLayout>
               </ProtectedRoute>
             }
