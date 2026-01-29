@@ -10,7 +10,7 @@
 # ============================================
 @host = localhost
 @port = 5000
-@baseUrl = http://{{host}}:{{port}}
+@baseUrl =https://intellihealth.onrender.com
 
 # Token variables (will be auto-populated after login)
 @patientToken = 
