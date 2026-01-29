@@ -65,6 +65,7 @@ Content-Type: application/json
   }
 }
 
+
 ### Register Doctor
 POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
