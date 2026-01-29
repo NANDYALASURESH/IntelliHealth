@@ -4,6 +4,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { Toaster } from "react-hot-toast";
 
 import Login from "./pages/Login";
+import Welcome from "./pages/Welcome";
 import MainLayout from "./layouts/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
@@ -26,7 +27,8 @@ const App = () => {
         <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
 
         <Routes>
-          {/* Public Route */}
+          {/* Public Routes */}
+          <Route path="/" element={<Welcome />} />
           <Route path="/login" element={<Login />} />
 
           {/* Generic Dashboard Route */}
