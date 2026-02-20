@@ -73,6 +73,23 @@ export default function LoginForm() {
     }
   };
 
+  const sampleAccounts = [
+    { role: 'admin', email: 'admin@intellihealth.com', password: 'Admin123!', icon: '🛡️', label: 'Admin' },
+    { role: 'doctor', email: 'sarah.wilson@intellihealth.com', password: 'Doctor123!', icon: '👨‍⚕️', label: 'Doctor' },
+    { role: 'patient', email: 'john.doe@example.com', password: 'Patient123!', icon: '🤒', label: 'Patient' },
+    { role: 'lab', email: 'lab@intellihealth.com', password: 'Lab123!', icon: '🔬', label: 'Lab' }
+  ];
+
+  const handleSampleLogin = (account) => {
+    setFormData({
+      email: account.email,
+      password: account.password,
+      role: account.role
+    });
+    setErrors({});
+    setServerError('');
+  };
+
   const handleSubmit = async () => {
     setServerError('');
     if (!validateForm()) return;
@@ -231,6 +248,27 @@ export default function LoginForm() {
           <a href="#" className="text-sm text-indigo-600 hover:text-indigo-500 transition-colors">
             Forgot your password?
           </a>
+        </div>
+
+        {/* Sample Login Section */}
+        <div className="mt-8 pt-6 border-t border-gray-100">
+          <p className="text-sm font-semibold text-gray-700 mb-4 text-center">Sample Login for Recruiters</p>
+          <div className="grid grid-cols-2 gap-3">
+            {sampleAccounts.map((account) => (
+              <button
+                key={account.role}
+                type="button"
+                onClick={() => handleSampleLogin(account)}
+                className="flex items-center space-x-2 p-3 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:border-indigo-200 hover:shadow-md transition-all duration-200 text-left group"
+              >
+                <span className="text-xl group-hover:scale-110 transition-transform duration-200">{account.icon}</span>
+                <div className="overflow-hidden">
+                  <p className="text-xs font-bold text-gray-800 leading-tight">{account.label}</p>
+                  <p className="text-[10px] text-gray-500 truncate">{account.email}</p>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Footer */}
