@@ -1,7 +1,7 @@
 // src/components/Navbar.js
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, User, LogOut, Activity, Bell, Search, Settings } from 'lucide-react';
+import { Menu, X, User, LogOut, Activity, Bell, Search, Settings, MessageSquare } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { notificationApi } from '../services/api';
 import toast from 'react-hot-toast';
@@ -226,8 +226,8 @@ const Navbar = () => {
                 <button
                   onClick={() => navigate('/messages')}
                   className={`p-2 rounded-lg transition-all duration-200 relative group ${location.pathname === '/messages'
-                      ? 'text-indigo-600 bg-indigo-50'
-                      : 'text-gray-500 hover:text-indigo-600 hover:bg-indigo-50'
+                    ? 'text-indigo-600 bg-indigo-50'
+                    : 'text-gray-500 hover:text-indigo-600 hover:bg-indigo-50'
                     }`}
                   aria-label="Messages"
                 >
@@ -540,8 +540,8 @@ const Navbar = () => {
                     setIsMenuOpen(false);
                   }}
                   className={`p-2 rounded-lg transition-colors ${location.pathname === '/messages'
-                      ? 'text-indigo-600 bg-indigo-50'
-                      : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50'
+                    ? 'text-indigo-600 bg-indigo-50'
+                    : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50'
                     }`}
                   aria-label="Messages"
                 >
