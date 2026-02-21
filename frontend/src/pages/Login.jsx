@@ -243,12 +243,7 @@ export default function LoginForm() {
           </button>
         </form>
 
-        {/* Forgot password */}
-        <div className="mt-6 text-center">
-          <a href="#" className="text-sm text-indigo-600 hover:text-indigo-500 transition-colors">
-            Forgot your password?
-          </a>
-        </div>
+
 
         {/* Sample Login Section */}
         <div className="mt-8 pt-6 border-t border-gray-100">
