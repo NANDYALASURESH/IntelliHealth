@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import CompleteTestForm from '../components/CompleteTestForm';
 import TestDetailsModal from '../components/TestDetailsModal';
 import SpecimenModal from '../components/SpecimenModal';
+import BarcodeScannerModal from '../components/BarcodeScannerModal';
 import { Download, Scan } from 'lucide-react';
 
 const LabDashboard = () => {
@@ -25,6 +26,7 @@ const LabDashboard = () => {
     const [viewingReport, setViewingReport] = useState(null);
     const [showCompleteModal, setShowCompleteModal] = useState(false);
     const [showSpecimenModal, setShowSpecimenModal] = useState(false);
+    const [showScannerModal, setShowScannerModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleExportWorklist = () => {
@@ -115,6 +117,18 @@ const LabDashboard = () => {
         fetchLabData();
     };
 
+    const handleBarcodeSuccess = (test) => {
+        setShowScannerModal(false);
+        setSelectedTest(test);
+        if (test.status === 'ordered') {
+            setShowSpecimenModal(true);
+        } else if (test.status === 'collected' || test.status === 'processing') {
+            setShowCompleteModal(true);
+        } else {
+            toast.success(`Order ${test.barcode} is ${test.status}`);
+        }
+    };
+
     const getPriorityColor = (priority) => {
         switch (priority) {
             case 'urgent': return 'bg-red-100 text-red-800 border-red-200';
@@ -166,7 +180,10 @@ const LabDashboard = () => {
                     >
                         <Plus className="w-4 h-4" /> Process Next Case
                     </button>
-                    <button onClick={() => toast.success('Barcode scanner ready')} className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 bg-white shadow-sm flex items-center gap-2 text-xs font-bold uppercase transition-all">
+                    <button
+                        onClick={() => setShowScannerModal(true)}
+                        className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 bg-white shadow-sm flex items-center gap-2 text-xs font-bold uppercase transition-all"
+                    >
                         <Scan className="w-4 h-4 text-purple-600" /> Scan Tube
                     </button>
                     <button onClick={handleExportWorklist} className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 bg-white shadow-sm flex items-center gap-2 text-xs font-bold uppercase transition-all">
@@ -342,6 +359,12 @@ const LabDashboard = () => {
             )}
             {viewingReport && (
                 <TestDetailsModal result={viewingReport} onClose={() => setViewingReport(null)} />
+            )}
+            {showScannerModal && (
+                <BarcodeScannerModal
+                    onClose={() => setShowScannerModal(false)}
+                    onScanSuccess={handleBarcodeSuccess}
+                />
             )}
         </div>
     );

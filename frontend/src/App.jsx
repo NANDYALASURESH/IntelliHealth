@@ -14,6 +14,7 @@ import DoctorAppointments from "./pages/DoctorAppointments";
 import DoctorPatients from "./pages/DoctorPatients";
 import PatientDashboard from "./pages/PatientDashboard";
 import MyPrescriptions from "./pages/MyPrescriptions";
+import Messaging from './pages/Messaging';
 import MyLabResults from "./pages/MyLabResults";
 import MyAppointments from "./pages/MyAppointments";
 import MedicalRecords from "./pages/MedicalRecords";
@@ -164,6 +165,17 @@ const App = () => {
               <ProtectedRoute allowedRoles={["patient"]}>
                 <MainLayout>
                   <PatientProfile />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/messages"
+            element={
+              <ProtectedRoute allowedRoles={["doctor", "patient"]}>
+                <MainLayout>
+                  <Messaging />
                 </MainLayout>
               </ProtectedRoute>
             }

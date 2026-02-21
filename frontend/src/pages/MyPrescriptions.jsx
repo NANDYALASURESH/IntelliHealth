@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, Download, Calendar, User, Pill, Clock } from 'lucide-react';
-import { apiRequest } from '../services/api';
+import { FileText, Download, Calendar, User, Pill, Clock, RefreshCw } from 'lucide-react';
+import { prescriptionApi } from '../services/api';
 import toast from 'react-hot-toast';
 
 const MyPrescriptions = () => {
     const [prescriptions, setPrescriptions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('all'); // all, active, completed
+    const [requestingRefill, setRequestingRefill] = useState(null); // id of prescription being refilled
 
     useEffect(() => {
         fetchPrescriptions();
@@ -15,15 +16,31 @@ const MyPrescriptions = () => {
     const fetchPrescriptions = async () => {
         try {
             setLoading(true);
-            const response = await apiRequest('/prescriptions/my');
-            if (response.success || response.data) {
-                setPrescriptions(response.data?.prescriptions || response.prescriptions || []);
+            const response = await prescriptionApi.listMy();
+            if (response.success) {
+                setPrescriptions(response.data?.prescriptions || []);
             }
         } catch (error) {
             toast.error('Failed to load prescriptions');
             console.error(error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleRequestRefill = async (id) => {
+        try {
+            setRequestingRefill(id);
+            const response = await prescriptionApi.requestRefill(id);
+            if (response.success) {
+                toast.success(response.message || 'Refill request processed');
+                fetchPrescriptions(); // Refresh list to see updated refill counts
+            }
+        } catch (error) {
+            toast.error('Failed to request refill');
+            console.error(error);
+        } finally {
+            setRequestingRefill(null);
         }
     };
 
@@ -107,6 +124,19 @@ const MyPrescriptions = () => {
                                 >
                                     <Download className="w-5 h-5" />
                                 </button>
+                                {prescription.status === 'active' && (
+                                    <button
+                                        onClick={() => handleRequestRefill(prescription._id)}
+                                        disabled={requestingRefill === prescription._id}
+                                        className={`flex items-center space-x-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${requestingRefill === prescription._id
+                                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                            : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'
+                                            }`}
+                                    >
+                                        <RefreshCw className={`w-4 h-4 ${requestingRefill === prescription._id ? 'animate-spin' : ''}`} />
+                                        <span>{requestingRefill === prescription._id ? 'Processing...' : 'Request Refill'}</span>
+                                    </button>
+                                )}
                             </div>
                         </div>
 
@@ -147,6 +177,9 @@ const MyPrescriptions = () => {
                                                 <span className="font-medium">Instructions:</span> {med.instructions}
                                             </p>
                                         )}
+                                        <div className="mt-2 text-xs font-medium text-blue-600">
+                                            Refills Remaining: {med.refills || 0}
+                                        </div>
                                     </div>
                                 ))}
                             </div>

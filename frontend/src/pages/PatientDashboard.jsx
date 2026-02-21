@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Calendar, Heart, Clock, User, FileText, Activity, X } from 'lucide-react';
 import { toast } from 'react-hot-toast';
@@ -162,13 +163,20 @@ const PatientDashboard = () => {
     );
   };
   const QuickActions = () => {
+    const navigate = useNavigate();
     return (
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
-        <button className="w-full py-2 px-4 mb-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+        <button
+          onClick={() => navigate('/patient/prescriptions')}
+          className="w-full py-2 px-4 mb-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >
           Request Prescription Refill
         </button>
-        <button className="w-full py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700 transition">
+        <button
+          onClick={() => navigate('/messages')}
+          className="w-full py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700 transition"
+        >
           Contact Doctor
         </button>
       </div>

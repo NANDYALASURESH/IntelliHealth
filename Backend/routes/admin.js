@@ -39,6 +39,12 @@ router.get('/logs', getSystemLogs);
 // @route   GET /api/admin/system-health
 router.get('/system-health', getSystemHealth);
 
+// @route   GET /api/admin/settings
+router.get('/settings', getSettings);
+
+// @route   PATCH /api/admin/settings
+router.patch('/settings', updateSettings);
+
 // @route   POST /api/admin/assign-primary-doctor
 router.post('/assign-primary-doctor', assignPrimaryDoctor);
 

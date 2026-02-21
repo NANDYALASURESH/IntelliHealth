@@ -1,152 +1,110 @@
-# IntelliHealth - Quick Start Guide
+# 🏥 IntelliHealth - Advanced Healthcare Management Platform
 
-## Prerequisites
-- Node.js >= 16.0.0
-- MongoDB (local or cloud)
-- npm >= 8.0.0
+IntelliHealth is a premium, full-stack healthcare platform designed to streamline communication and data management between patients, doctors, lab technicians, and administrators. Built with a focus on real-time interactivity, security, and a modern user experience.
 
-## Setup Instructions
+---
 
-### 1. Backend Setup
+## 🚀 Key Features
 
-```powershell
-# Navigate to backend
+### 👤 Patient Experience
+- **Interactive Dashboard**: Health scores, vital signs monitoring, and quick action shortcuts.
+- **Secure Messaging**: Direct, conversational communication with assigned doctors.
+- **Appointment Management**: Real-time booking with collision detection to prevent double-booking.
+- **Prescription Tracking**: View active medications and "Request Refill" with automatic availability checks.
+- **Lab results**: Instant access to completed lab reports and history.
+
+### 🩺 Doctor Portal
+- **Patient Management**: Complete access to patient histories, medical records, and vitals.
+- **Appointment Scheduling**: Manage daily schedules and consult patients.
+- **Prescription System**: Issue digital prescriptions and authorize refill requests.
+- **Communication Hub**: Centralized messaging with patients for better care coordination.
+
+### 🧪 Laboratory Suite
+- **Worklist Management**: Track pending tests by priority (Urgent, High, Routine).
+- **Barcode Workflow**: Unique barcode generation (`LAB-XXXXXXXX`) and "Scan Tube" lookup for specimen tracking.
+- **Electronic Result Entry**: Digital entry of test parameters with automatic abnormal/critical flag detection.
+
+### 🛡️ Admin Core
+- **System monitoring**: Real-time audit logs of all user actions across the platform.
+- **Configuration Engine**: Persistent system-wide settings for notifications, database, and email.
+- **User Management**: Oversight of all roles and access control.
+
+---
+
+## 🛠️ Technical Stack
+
+- **Frontend**: React (Vite), Tailwind CSS, Lucide React, Framer Motion
+- **Backend**: Node.js, Express, MongoDB (Mongoose)
+- **Real-time**: Socket.IO for live notifications and logs
+- **Security**: JWT Authentication, Role-Based Access Control (RBAC), Helmet security headers
+- **State Management**: React Context API
+- **API**: RESTful architecture with custom response formatting
+
+---
+
+## ⚙️ Setup & Installation
+
+### 1. Prerequisites
+- Node.js >= 16.x
+- MongoDB (Local or Atlas)
+- npm or yarn
+
+### 2. Backend Installation
+```bash
 cd Backend
-
-# Install dependencies
 npm install
-
-# Configure environment
-# Copy .env.example to .env and update with your values
-Copy-Item .env.example .env
-
-# Start MongoDB (if running locally)
-# Make sure MongoDB is running on mongodb://localhost:27017
-
-# Seed database with sample data (optional)
-npm run seed
-
-# Start backend server
-npm run dev
+cp .env.example .env  # Update with your MongoDB URI and JWT Secret
+npm run seed          # Optional: Seed with demo accounts
+npm run dev           # Runs on http://localhost:5000
 ```
 
-Backend will run on: `http://localhost:5000`
-
-### 2. Frontend Setup
-
-```powershell
-# Navigate to frontend (from project root)
+### 3. Frontend Installation
+```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start development server
-npm run dev
+npm run dev           # Runs on http://localhost:5173
 ```
 
-Frontend will run on: `http://localhost:5173`
+---
 
-## Default Login Credentials
+## 🔑 Demo Credentials
 
-After seeding the database, you can use these credentials:
+| Role | Email | Password |
+| :--- | :--- | :--- |
+| **Admin** | admin@intellihealth.com | admin123 |
+| **Doctor** | doctor@intellihealth.com | doctor123 |
+| **Patient** | patient@intellihealth.com | patient123 |
+| **Lab** | lab@intellihealth.com | lab123 |
 
-**Admin:**
-- Email: admin@intellihealth.com
-- Password: admin123
+---
 
-**Doctor:**
-- Email: doctor@intellihealth.com
-- Password: doctor123
-
-**Patient:**
-- Email: patient@intellihealth.com
-- Password: patient123
-
-**Lab:**
-- Email: lab@intellihealth.com
-- Password: lab123
-
-## Important Environment Variables
-
-### Backend (.env)
-- `MONGODB_URI` - Your MongoDB connection string
-- `JWT_SECRET` - Secret key for JWT tokens
-- `EMAIL_USER` - Email for sending notifications
-- `EMAIL_PASS` - Email app password
-- `CLOUDINARY_*` - Cloudinary credentials (for file uploads)
-
-### Frontend (.env)
-- `VITE_API_BASE_URL` - Backend API URL (default: http://localhost:5000/api)
-
-## Available Scripts
-
-### Backend
-- `npm run dev` - Start development server with nodemon
-- `npm start` - Start production server
-- `npm test` - Run tests
-- `npm run seed` - Seed database with sample data
-- `npm run lint` - Run ESLint
-
-### Frontend
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-
-## Troubleshooting
-
-### MongoDB Connection Issues
-- Ensure MongoDB is running
-- Check `MONGODB_URI` in Backend/.env
-- For local MongoDB: `mongodb://localhost:27017/intellihealth`
-
-### CORS Issues
-- Verify `CLIENT_URL` in Backend/.env matches your frontend URL
-- Default: `http://localhost:5173`
-
-### Port Already in Use
-- Backend: Change `PORT` in Backend/.env
-- Frontend: Vite will automatically suggest another port
-
-## Project Structure
+## 📁 Project Architecture
 
 ```
 IntelliHealth/
 ├── Backend/
-│   ├── config/         # Configuration files
-│   ├── controllers/    # Route controllers
-│   ├── middleware/     # Express middleware
-│   ├── models/         # Mongoose models
-│   ├── routes/         # API routes
-│   ├── services/       # Business logic
-│   ├── scripts/        # Utility scripts
-│   └── server.js       # Entry point
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/ # React components
-│   │   ├── pages/      # Page components
-│   │   ├── context/    # React context
-│   │   ├── services/   # API services
-│   │   └── App.jsx     # Main app
-│   └── index.html
-│
-└── data/              # Sample data files
+│   ├── controllers/    # Business logic & Route handlers
+│   ├── models/         # Mongoose schemas (Message, LabResult, Appointment, etc.)
+│   ├── routes/         # Express API endpoints
+│   ├── middleware/     # Auth & validation layers
+│   └── services/       # Persistent utility services
+└── frontend/
+    ├── src/
+    │   ├── components/ # Reusable UI atoms & modules
+    │   ├── pages/      # Feature-specific views
+    │   ├── services/   # Centralized API layer (api.js)
+    │   └── context/    # Global Auth & State
 ```
 
-## Next Steps
+---
 
-1. Configure your `.env` files
-2. Start MongoDB
-3. Run backend server
-4. Run frontend server
-5. Open browser to `http://localhost:5173`
-6. Login with default credentials
+## 📝 Recent Implementation (Feb 2026)
+- **Feature 4**: Patient "Request Refill" with automated backend logic.
+- **Feature 5**: Secure Patient-Doctor basic messaging service.
+- **Feature 6**: Lab specimen barcode scanner simulation & lookup.
+- **Feature 7**: Backend appointment collision & overlap detection.
 
-## Support
+---
 
-For issues or questions, check:
-- Backend README: `Backend/README.md`
-- Frontend README: `frontend/README.md`
-- Admin Dashboard Guide: `frontend/README_ADMIN.md`
+## ⚖️ License
+Distributed under the MIT License. See `LICENSE` for more information.

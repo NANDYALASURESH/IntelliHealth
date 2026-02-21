@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Settings, Bell, Database, Server, Globe, Mail, Clock, Save, RefreshCw } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { adminApi } from '../../services/api';
 import toast from 'react-hot-toast';
 
 const SystemSettings = () => {
@@ -61,11 +62,19 @@ const SystemSettings = () => {
 
   const fetchSystemSettings = async () => {
     try {
-      // Mock data - replace with actual API calls
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setLoading(false);
+      setLoading(true);
+      const response = await adminApi.getSettings();
+      if (response.success && response.data.settings) {
+        const { general, notifications, database, email } = response.data.settings;
+        if (general) setGeneralSettings(prev => ({ ...prev, ...general }));
+        if (notifications) setNotificationSettings(prev => ({ ...prev, ...notifications }));
+        if (database) setDatabaseSettings(prev => ({ ...prev, ...database }));
+        if (email) setEmailSettings(prev => ({ ...prev, ...email }));
+      }
     } catch (error) {
+      console.error('Fetch settings error:', error);
       toast.error('Failed to fetch system settings');
+    } finally {
       setLoading(false);
     }
   };
@@ -101,10 +110,18 @@ const SystemSettings = () => {
   const saveSettings = async () => {
     setSaving(true);
     try {
-      // Mock API call - replace with actual implementation
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      toast.success('Settings saved successfully');
+      const payload = {
+        general: generalSettings,
+        notifications: notificationSettings,
+        database: databaseSettings,
+        email: emailSettings
+      };
+      const response = await adminApi.updateSettings(payload);
+      if (response.success) {
+        toast.success('Settings saved successfully');
+      }
     } catch (error) {
+      console.error('Save settings error:', error);
       toast.error('Failed to save settings');
     } finally {
       setSaving(false);
@@ -182,11 +199,10 @@ const SystemSettings = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${
-                  activeTab === tab.id
+                className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center ${activeTab === tab.id
                     ? 'border-indigo-500 text-indigo-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                  }`}
               >
                 <tab.icon className="w-4 h-4 mr-2" />
                 {tab.label}
@@ -329,7 +345,7 @@ const SystemSettings = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <h4 className="text-md font-medium text-gray-800">System Notifications</h4>
-                  
+
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -372,7 +388,7 @@ const SystemSettings = () => {
 
                 <div className="space-y-4">
                   <h4 className="text-md font-medium text-gray-800">Content Notifications</h4>
-                  
+
                   <div className="flex items-center">
                     <input
                       type="checkbox"
@@ -442,7 +458,7 @@ const SystemSettings = () => {
                   Backup Now
                 </button>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -543,7 +559,7 @@ const SystemSettings = () => {
                   Test Connection
                 </button>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">

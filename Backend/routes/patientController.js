@@ -197,16 +197,56 @@ exports.getAppointments = async (req, res) => {
 // @access  Private (Patient only)
 exports.bookAppointment = async (req, res) => {
   try {
+    const { doctor, scheduledDate, scheduledTime, duration = 30 } = req.body;
+    const patientId = req.user.id;
+
+    if (!doctor || !scheduledDate || !scheduledTime) {
+      return res.status(400).json(formatResponse(false, 'Doctor, date, and time are required'));
+    }
+
+    // Parse requested appointment time
+    const [hours, minutes] = scheduledTime.split(':').map(Number);
+    const requestedStart = new Date(scheduledDate);
+    requestedStart.setHours(hours, minutes, 0, 0);
+    const requestedEnd = new Date(requestedStart.getTime() + duration * 60000);
+
+    // Check for collisions
+    // Fetch all active appointments for this doctor on this day
+    const startOfDay = new Date(scheduledDate);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(scheduledDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const existingAppointments = await Appointment.find({
+      doctor,
+      scheduledDate: { $gte: startOfDay, $lte: endOfDay },
+      status: { $in: ['scheduled', 'confirmed', 'in-progress', 'pending'] }
+    });
+
+    const isCollision = existingAppointments.some(existing => {
+      const [exHours, exMinutes] = existing.scheduledTime.split(':').map(Number);
+      const existingStart = new Date(existing.scheduledDate);
+      existingStart.setHours(exHours, exMinutes, 0, 0);
+      const existingEnd = new Date(existingStart.getTime() + (existing.duration || 30) * 60000);
+
+      // Overlap logic: NewStart < ExistingEnd && NewEnd > ExistingStart
+      return requestedStart < existingEnd && requestedEnd > existingStart;
+    });
+
+    if (isCollision) {
+      return res.status(409).json(formatResponse(false, 'This time slot is already booked for this doctor. Please choose another time.'));
+    }
+
     const payload = {
       ...req.body,
-      patient: req.user.id,
+      patient: patientId,
       status: 'pending'
     };
     const appt = await Appointment.create(payload);
     res.status(201).json(formatResponse(true, 'Appointment booked successfully', { appointment: appt }));
   } catch (error) {
     console.error('Book appointment error:', error);
-    res.status(400).json(formatResponse(false, error.message, null));
+    res.status(500).json(formatResponse(false, 'Failed to book appointment: ' + error.message, null));
   }
 };
 

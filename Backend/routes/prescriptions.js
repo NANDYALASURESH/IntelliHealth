@@ -11,7 +11,8 @@ const {
   getPrescriptionsByPatient,
   getMyPrescriptions,
   getPrescriptionsByDoctor,
-  getPrescriptionById
+  getPrescriptionById,
+  requestRefill
 } = require('../controllers/prescriptionController');
 
 router.use(protect);
@@ -21,6 +22,7 @@ router.get('/my', getMyPrescriptions);
 router.get('/doctor/me', getPrescriptionsByDoctor);
 router.get('/patient/:patientId', getPrescriptionsByPatient);
 router.get('/:id', getPrescriptionById);
+router.post('/:id/refill', requestRefill);
 
 module.exports = router;
 

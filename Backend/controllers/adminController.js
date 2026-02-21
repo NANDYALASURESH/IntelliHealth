@@ -184,14 +184,30 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// @desc    Delete a user (stub)
+// @desc    Delete a user
 // @route   DELETE /api/admin/users/:id
 // @access  Private (Admin only)
 exports.deleteUser = async (req, res) => {
   try {
-    return res.status(501).json(formatResponse(false, 'Admin delete user not implemented', null));
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) {
+      return res.status(404).json(formatResponse(false, 'User not found', null));
+    }
+
+    // Create audit log
+    await createAuditLog({
+      user: req.user.id,
+      action: 'USER_DELETE',
+      resource: 'User',
+      resourceId: req.params.id,
+      details: { email: user.email, role: user.role },
+      ipAddress: req.ip
+    });
+
+    res.status(200).json(formatResponse(true, 'User deleted successfully', null));
   } catch (error) {
-    return res.status(500).json(formatResponse(false, 'Server error deleting user', null));
+    console.error('Delete user error:', error);
+    res.status(500).json(formatResponse(false, 'Server error deleting user', null));
   }
 };
 
@@ -380,5 +396,60 @@ exports.getSystemLogs = async (req, res) => {
   } catch (error) {
     console.error('Get system logs error:', error);
     res.status(500).json(formatResponse(false, 'Error retrieving system logs', null));
+  }
+};
+
+// @desc    Get system settings
+// @route   GET /api/admin/settings
+// @access  Private (Admin only)
+exports.getSettings = async (req, res) => {
+  try {
+    let settings = await require('../models/Setting').findOne();
+    if (!settings) {
+      // Create default settings if not exists
+      settings = await require('../models/Setting').create({});
+    }
+    res.status(200).json(formatResponse(true, 'System settings retrieved', { settings }));
+  } catch (error) {
+    console.error('Get settings error:', error);
+    res.status(500).json(formatResponse(false, 'Error retrieving settings', null));
+  }
+};
+
+// @desc    Update system settings
+// @route   PATCH /api/admin/settings
+// @access  Private (Admin only)
+exports.updateSettings = async (req, res) => {
+  try {
+    const updates = req.body;
+    let settings = await require('../models/Setting').findOne();
+
+    if (settings) {
+      // Deep merge or specific updates
+      Object.keys(updates).forEach(key => {
+        if (typeof updates[key] === 'object' && updates[key] !== null) {
+          settings[key] = { ...settings[key].toObject(), ...updates[key] };
+        } else {
+          settings[key] = updates[key];
+        }
+      });
+      await settings.save();
+    } else {
+      settings = await require('../models/Setting').create(updates);
+    }
+
+    // Create audit log
+    await createAuditLog({
+      user: req.user.id,
+      action: 'SYSTEM_SETTINGS_UPDATE',
+      resource: 'System',
+      details: updates,
+      ipAddress: req.ip
+    });
+
+    res.status(200).json(formatResponse(true, 'System settings updated successfully', { settings }));
+  } catch (error) {
+    console.error('Update settings error:', error);
+    res.status(500).json(formatResponse(false, 'Error updating settings', null));
   }
 };

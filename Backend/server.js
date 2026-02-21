@@ -13,6 +13,7 @@ require('./models/User');
 require('./models/Patient');
 require('./models/Doctor');
 require('./models/Appointment');
+require('./models/Message');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -24,6 +25,7 @@ const appointmentRoutes = require('./routes/appointments');
 const medicalRecordRoutes = require('./routes/medical-records');
 const prescriptionRoutes = require('./routes/prescriptions');
 const notificationRoutes = require('./routes/notifications');
+const messageRoutes = require('./routes/messages');
 const uploadRoutes = require('./routes/upload');
 
 // Import middleware
@@ -111,6 +113,7 @@ app.use('/api/appointments', appointmentRoutes);
 app.use('/api/medical-records', medicalRecordRoutes);
 app.use('/api/prescriptions', prescriptionRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/messages', messageRoutes);
 app.use('/api/upload', uploadRoutes);
 
 // 404 handler

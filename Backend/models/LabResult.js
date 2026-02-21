@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const labResultSchema = new mongoose.Schema({
+  barcode: {
+    type: String,
+    unique: true
+  },
   patient: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Patient',
@@ -91,6 +95,16 @@ const labResultSchema = new mongoose.Schema({
 labResultSchema.index({ patient: 1, createdAt: -1 });
 labResultSchema.index({ orderedBy: 1, status: 1 });
 labResultSchema.index({ status: 1, priority: 1 });
+labResultSchema.index({ barcode: 1 }, { unique: true });
+
+// Generate random barcode before validation
+labResultSchema.pre('validate', async function (next) {
+  if (!this.barcode) {
+    const random = Math.floor(10000000 + Math.random() * 90000000);
+    this.barcode = `LAB-${random}`;
+  }
+  next();
+});
 
 // Pre-save middleware to check for abnormal/critical results
 labResultSchema.pre('save', function (next) {

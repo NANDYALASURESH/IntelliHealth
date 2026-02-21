@@ -136,4 +136,87 @@ exports.getPrescriptionById = async (req, res) => {
         console.error('Get prescription error:', error);
         res.status(500).json(formatResponse(false, 'Server error retrieving prescription', null));
     }
-}
+};
+
+// @desc    Request a refill for a prescription
+// @route   POST /api/prescriptions/:id/refill
+// @access  Private (Patient only)
+exports.requestRefill = async (req, res) => {
+    try {
+        const prescription = await Prescription.findById(req.params.id)
+            .populate('doctor', 'name email');
+
+        if (!prescription) {
+            return res.status(404).json(formatResponse(false, 'Prescription not found', null));
+        }
+
+        // Verify patient ownership
+        if (prescription.patient.toString() !== req.user.id) {
+            return res.status(403).json(formatResponse(false, 'Not authorized', null));
+        }
+
+        // Check if prescription is active
+        if (prescription.status !== 'active') {
+            return res.status(400).json(formatResponse(false, `Prescription is ${prescription.status}`, null));
+        }
+
+        // Check if refills are available
+        const canRefillAutomatically = prescription.medications.some(med => med.refills > 0);
+
+        if (canRefillAutomatically) {
+            // Decrement refills for all medications that have them
+            prescription.medications = prescription.medications.map(med => ({
+                ...med.toObject(),
+                refills: med.refills > 0 ? med.refills - 1 : 0
+            }));
+
+            // Add to refill history
+            prescription.refillHistory.push({
+                date: Date.now(),
+                quantity: 1,
+                pharmacy: 'Requested via portal'
+            });
+
+            await prescription.save();
+
+            // Create audit log
+            await createAuditLog({
+                user: req.user.id,
+                action: 'PRESCRIPTION_REFILL_AUTO',
+                resource: 'Prescription',
+                resourceId: prescription._id,
+                ipAddress: req.ip
+            });
+
+            return res.status(200).json(formatResponse(true, 'Refill processed automatically', { prescription }));
+        } else {
+            // Request authorization from doctor via notification
+            const Notification = require('../models/Notification');
+
+            await Notification.create({
+                recipient: prescription.doctor._id,
+                sender: req.user.id,
+                title: 'Refill Request',
+                message: `Patient ${req.user.name} has requested a refill for prescription #${prescription.prescriptionNumber}. No refills remaining.`,
+                type: 'prescription',
+                priority: 'normal',
+                data: { prescriptionId: prescription._id }
+            });
+
+            // Create audit log
+            await createAuditLog({
+                user: req.user.id,
+                action: 'PRESCRIPTION_REFILL_REQUEST',
+                resource: 'Prescription',
+                resourceId: prescription._id,
+                ipAddress: req.ip
+            });
+
+            return res.status(200).json(formatResponse(true, 'Refill request sent to your doctor for authorization', null));
+        }
+
+    } catch (error) {
+        console.error('Request refill error:', error);
+        res.status(500).json(formatResponse(false, 'Server error requesting refill', null));
+    }
+};

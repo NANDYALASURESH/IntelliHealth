@@ -262,3 +262,24 @@ exports.completeLabTest = async (req, res) => {
     res.status(500).json(formatResponse(false, error.message || 'Error completing lab test', null));
   }
 };
+
+// @desc    Get lab result by barcode
+// @route   GET /api/lab/barcode/:barcode
+// @access  Private (Lab only)
+exports.getByBarcode = async (req, res) => {
+  try {
+    const { barcode } = req.params;
+    const result = await LabResult.findOne({ barcode })
+      .populate('patient', 'name email dateOfBirth gender')
+      .populate('orderedBy', 'name specializations');
+
+    if (!result) {
+      return res.status(404).json(formatResponse(false, 'No lab order found for this barcode'));
+    }
+
+    res.json(formatResponse(true, 'Lab order retrieved successfully', { result }));
+  } catch (error) {
+    console.error('Get by barcode error:', error);
+    res.status(500).json(formatResponse(false, 'Server error retrieving lab order'));
+  }
+};

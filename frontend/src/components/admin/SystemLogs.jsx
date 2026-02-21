@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, Search, Filter, Download, RefreshCw, Eye, Clock, User, Activity, Server, Database, Shield, FileText } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { adminApi } from '../../services/api';
 import toast from 'react-hot-toast';
 
 const SystemLogs = () => {
@@ -15,95 +16,57 @@ const SystemLogs = () => {
   const [showLogDetails, setShowLogDetails] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [logsPerPage] = useState(50);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     fetchSystemLogs();
-  }, [dateRange]);
+  }, [dateRange, currentPage, logLevel, logType]);
 
   const fetchSystemLogs = async () => {
     try {
-      // Mock data - replace with actual API calls
-      const mockLogs = [
-        {
-          id: 1,
-          timestamp: new Date(Date.now() - 1000 * 60 * 5),
-          level: 'info',
-          type: 'user',
-          message: 'User login successful',
-          details: {
-            userId: 'user123',
-            email: 'john.doe@example.com',
-            ip: '192.168.1.100',
-            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-          },
-          source: 'auth-service',
-          duration: null
-        },
-        {
-          id: 2,
-          timestamp: new Date(Date.now() - 1000 * 60 * 15),
-          level: 'warning',
-          type: 'security',
-          message: 'Multiple failed login attempts detected',
-          details: {
-            userId: 'unknown',
-            email: 'admin@intellihealth.com',
-            ip: '203.0.113.45',
-            attempts: 5,
-            lastAttempt: new Date(Date.now() - 1000 * 60 * 15)
-          },
-          source: 'security-service',
-          duration: null
-        },
-        {
-          id: 3,
-          timestamp: new Date(Date.now() - 1000 * 60 * 30),
-          level: 'error',
-          type: 'system',
-          message: 'Database connection timeout',
-          details: {
-            database: 'main-db',
-            connectionId: 'conn-456',
-            timeout: 30000,
-            retryAttempts: 3
-          },
-          source: 'database-service',
-          duration: 30000
-        },
-        {
-          id: 4,
-          timestamp: new Date(Date.now() - 1000 * 60 * 60),
-          level: 'info',
-          type: 'audit',
-          message: 'User profile updated',
-          details: {
-            userId: 'user456',
-            email: 'jane.smith@example.com',
-            changes: ['phone', 'address'],
-            adminId: 'admin123'
-          },
-          source: 'user-service',
-          duration: 150
-        },
-        {
-          id: 5,
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2),
-          level: 'info',
-          type: 'system',
-          message: 'Scheduled backup completed',
-          details: {
-            backupId: 'backup-789',
-            size: '2.5GB',
-            duration: 180000,
-            status: 'success'
-          },
-          source: 'backup-service',
-          duration: 180000
-        }
-      ];
+      setLoading(true);
+      const params = {
+        page: currentPage,
+        limit: logsPerPage,
+      };
 
-      setLogs(mockLogs);
+      if (logLevel !== 'all') {
+        // Map frontend level to backend status if possible, 
+        // or filter by extra status if backend supported it.
+        // For now, mapping logLevel to status:
+        if (logLevel === 'error') params.status = 'error';
+        if (logLevel === 'warning') params.status = 'failed';
+        if (logLevel === 'info') params.status = 'success';
+      }
+
+      if (logType !== 'all') {
+        // Map frontend type to backend resource
+        params.resource = logType.charAt(0).toUpperCase() + logType.slice(1);
+      }
+
+      const response = await adminApi.getLogs(params);
+
+      if (response.success) {
+        const mappedLogs = response.data.logs.map(log => ({
+          id: log._id,
+          timestamp: new Date(log.timestamp),
+          // Derived level
+          level: log.status === 'error' ? 'error' : (log.status === 'failed' ? 'warning' : 'info'),
+          type: log.resource.toLowerCase(),
+          message: log.action,
+          details: log.details || {},
+          source: log.resource,
+          duration: log.details?.duration || null,
+          user: log.user
+        }));
+        setLogs(mappedLogs);
+        // Assuming backend returns total for pagination
+        if (response.data.pagination) {
+          setTotalPages(response.data.pagination.pages);
+        }
+      }
     } catch (error) {
+      console.error('Fetch logs error:', error);
       toast.error('Failed to fetch system logs');
     } finally {
       setLoading(false);
@@ -144,28 +107,22 @@ const SystemLogs = () => {
 
   const filteredLogs = logs.filter(log => {
     const matchesSearch = log.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         log.details?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         log.details?.userId?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesLevel = logLevel === 'all' || log.level === logLevel;
-    const matchesType = logType === 'all' || log.type === logType;
-    return matchesSearch && matchesLevel && matchesType;
+      log.details?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      log.details?.userId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      log.user?.name?.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesSearch;
   });
 
-  const paginatedLogs = filteredLogs.slice(
-    (currentPage - 1) * logsPerPage,
-    currentPage * logsPerPage
-  );
-
-  const totalPages = Math.ceil(filteredLogs.length / logsPerPage);
+  const paginatedLogs = filteredLogs; // Managed by backend now, but keeping client-side search for currently loaded page
 
   const exportLogs = () => {
     // Mock export functionality - replace with actual implementation
-    const csvContent = 'data:text/csv;charset=utf-8,' + 
+    const csvContent = 'data:text/csv;charset=utf-8,' +
       'Timestamp,Level,Type,Message,Source\n' +
-      filteredLogs.map(log => 
+      filteredLogs.map(log =>
         `${log.timestamp.toISOString()},${log.level},${log.type},"${log.message}",${log.source}`
       ).join('\n');
-    
+
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
@@ -173,7 +130,7 @@ const SystemLogs = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
     toast.success('Logs exported successfully');
   };
 
@@ -407,11 +364,10 @@ const SystemLogs = () => {
                     <button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                        page === currentPage
-                          ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
-                          : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
-                      }`}
+                      className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${page === currentPage
+                        ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
+                        : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                        }`}
                     >
                       {page}
                     </button>
@@ -447,7 +403,7 @@ const SystemLogs = () => {
                   </svg>
                 </button>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -474,19 +430,19 @@ const SystemLogs = () => {
                     <p className="mt-1 text-sm text-gray-900">{selectedLog.source}</p>
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Message</label>
                   <p className="mt-1 text-sm text-gray-900 bg-gray-50 p-3 rounded-md">{selectedLog.message}</p>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Details</label>
                   <pre className="mt-1 text-sm text-gray-900 bg-gray-50 p-3 rounded-md overflow-x-auto">
                     {JSON.stringify(selectedLog.details, null, 2)}
                   </pre>
                 </div>
-                
+
                 {selectedLog.duration && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Duration</label>
@@ -494,7 +450,7 @@ const SystemLogs = () => {
                   </div>
                 )}
               </div>
-              
+
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={() => setShowLogDetails(false)}

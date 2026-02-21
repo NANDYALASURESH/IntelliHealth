@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, User, LogOut, Activity, Bell, Search, Settings } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { notificationApi } from '../services/api';
 import toast from 'react-hot-toast';
 
 const Navbar = () => {
@@ -18,16 +19,52 @@ const Navbar = () => {
   const notificationRef = useRef(null);
   const searchRef = useRef(null);
 
+  const fetchNotifications = async () => {
+    try {
+      const response = await notificationApi.list();
+      if (response.success) {
+        setNotifications(response.data.items || []);
+      }
+    } catch (error) {
+      console.error('Fetch notifications error:', error);
+    }
+  };
+
   useEffect(() => {
-    // Mock notifications - replace with actual API call
     if (user) {
-      setNotifications([
-        { id: 1, message: 'New appointment scheduled', type: 'info', time: '5 min ago' },
-        { id: 2, message: 'Lab results available', type: 'success', time: '1 hour ago' },
-        { id: 3, message: 'Urgent: Patient requires attention', type: 'warning', time: '2 hours ago' }
-      ]);
+      fetchNotifications();
+      // Poll for updates every minute
+      const interval = setInterval(fetchNotifications, 60000);
+      return () => clearInterval(interval);
     }
   }, [user]);
+
+  const handleMarkAsRead = async (id) => {
+    try {
+      const response = await notificationApi.markAsRead(id);
+      if (response.success) {
+        setNotifications(prev =>
+          prev.map(n => n._id === id ? { ...n, isRead: true } : n)
+        );
+      }
+    } catch (error) {
+      toast.error('Failed to update notification');
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      const response = await notificationApi.markAllAsRead();
+      if (response.success) {
+        setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+        toast.success('All marked as read');
+      }
+    } catch (error) {
+      toast.error('Failed to update notifications');
+    }
+  };
+
+  const unreadCount = notifications.filter(n => !n.isRead).length;
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -119,11 +156,10 @@ const Navbar = () => {
                 {/* Dashboard Link */}
                 <Link
                   to={getDashboardLink()}
-                  className={`text-sm font-medium px-3 py-2 rounded-lg transition-all duration-200 whitespace-nowrap ${
-                    location.pathname === getDashboardLink()
-                      ? 'text-indigo-600 bg-indigo-50'
-                      : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
-                  }`}
+                  className={`text-sm font-medium px-3 py-2 rounded-lg transition-all duration-200 whitespace-nowrap ${location.pathname === getDashboardLink()
+                    ? 'text-indigo-600 bg-indigo-50'
+                    : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                    }`}
                 >
                   Dashboard
                 </Link>
@@ -136,9 +172,9 @@ const Navbar = () => {
                     aria-label="Notifications"
                   >
                     <Bell className="h-5 w-5" />
-                    {notifications.length > 0 && (
+                    {unreadCount > 0 && (
                       <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
-                        {notifications.length > 9 ? '9+' : notifications.length}
+                        {unreadCount > 9 ? '9+' : unreadCount}
                       </span>
                     )}
                   </button>
@@ -151,12 +187,16 @@ const Navbar = () => {
                       <div className="max-h-64 overflow-y-auto">
                         {notifications.length > 0 ? (
                           notifications.map((notification) => (
-                            <div key={notification.id} className="px-4 py-3 hover:bg-gray-50 border-b border-gray-50 last:border-b-0 cursor-pointer">
+                            <div
+                              key={notification._id}
+                              onClick={() => !notification.isRead && handleMarkAsRead(notification._id)}
+                              className={`px-4 py-3 hover:bg-gray-50 border-b border-gray-50 last:border-b-0 cursor-pointer transition-colors ${notification.isRead ? 'opacity-60' : 'bg-indigo-50/30'}`}
+                            >
                               <div className="flex items-start space-x-3">
-                                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${getNotificationColor(notification.type).split(' ')[1]}`}></div>
+                                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${notification.isRead ? 'bg-gray-300' : getNotificationColor(notification.type).split(' ')[1]}`}></div>
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-sm text-gray-900 line-clamp-2">{notification.message}</p>
-                                  <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
+                                  <p className={`text-sm line-clamp-2 ${notification.isRead ? 'text-gray-500' : 'text-gray-900 font-medium'}`}>{notification.message}</p>
+                                  <p className="text-xs text-gray-500 mt-1">{new Date(notification.createdAt).toLocaleString()}</p>
                                 </div>
                               </div>
                             </div>
@@ -168,15 +208,35 @@ const Navbar = () => {
                           </div>
                         )}
                       </div>
-                      <div className="px-4 py-3 border-t border-gray-100">
-                        <button className="text-sm text-indigo-600 hover:text-indigo-500 font-medium">
-                          View all notifications
+                      <div className="px-4 py-3 border-t border-gray-100 flex justify-between">
+                        <button
+                          onClick={handleMarkAllAsRead}
+                          className="text-xs text-indigo-600 hover:text-indigo-500 font-medium"
+                        >
+                          Mark all as read
+                        </button>
+                        <button className="text-xs text-gray-500 hover:text-gray-700 font-medium">
+                          Clear all
                         </button>
                       </div>
                     </div>
                   )}
                 </div>
-                
+
+                <button
+                  onClick={() => navigate('/messages')}
+                  className={`p-2 rounded-lg transition-all duration-200 relative group ${location.pathname === '/messages'
+                      ? 'text-indigo-600 bg-indigo-50'
+                      : 'text-gray-500 hover:text-indigo-600 hover:bg-indigo-50'
+                    }`}
+                  aria-label="Messages"
+                >
+                  <MessageSquare className="h-5 w-5" />
+                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    Messages
+                  </span>
+                </button>
+
                 {/* Profile Dropdown */}
                 <div className="relative" ref={profileRef}>
                   <button
@@ -271,11 +331,10 @@ const Navbar = () => {
                 {/* Dashboard Link */}
                 <Link
                   to={getDashboardLink()}
-                  className={`text-sm font-medium px-2 py-2 rounded-lg transition-all duration-200 ${
-                    location.pathname === getDashboardLink()
-                      ? 'text-indigo-600 bg-indigo-50'
-                      : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
-                  }`}
+                  className={`text-sm font-medium px-2 py-2 rounded-lg transition-all duration-200 ${location.pathname === getDashboardLink()
+                    ? 'text-indigo-600 bg-indigo-50'
+                    : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                    }`}
                 >
                   Dashboard
                 </Link>
@@ -288,9 +347,9 @@ const Navbar = () => {
                     aria-label="Notifications"
                   >
                     <Bell className="h-5 w-5" />
-                    {notifications.length > 0 && (
+                    {unreadCount > 0 && (
                       <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
-                        {notifications.length > 9 ? '9+' : notifications.length}
+                        {unreadCount > 9 ? '9+' : unreadCount}
                       </span>
                     )}
                   </button>
@@ -303,12 +362,16 @@ const Navbar = () => {
                       <div className="max-h-64 overflow-y-auto">
                         {notifications.length > 0 ? (
                           notifications.map((notification) => (
-                            <div key={notification.id} className="px-4 py-3 hover:bg-gray-50 border-b border-gray-50 last:border-b-0 cursor-pointer">
+                            <div
+                              key={notification._id}
+                              onClick={() => !notification.isRead && handleMarkAsRead(notification._id)}
+                              className={`px-4 py-3 hover:bg-gray-50 border-b border-gray-50 last:border-b-0 cursor-pointer transition-colors ${notification.isRead ? 'opacity-60' : 'bg-indigo-50/30'}`}
+                            >
                               <div className="flex items-start space-x-3">
-                                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${getNotificationColor(notification.type).split(' ')[1]}`}></div>
+                                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${notification.isRead ? 'bg-gray-300' : getNotificationColor(notification.type).split(' ')[1]}`}></div>
                                 <div className="flex-1 min-w-0">
-                                  <p className="text-sm text-gray-900 line-clamp-2">{notification.message}</p>
-                                  <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
+                                  <p className={`text-sm line-clamp-2 ${notification.isRead ? 'text-gray-500' : 'text-gray-900 font-medium'}`}>{notification.message}</p>
+                                  <p className="text-xs text-gray-500 mt-1">{new Date(notification.createdAt).toLocaleString()}</p>
                                 </div>
                               </div>
                             </div>
@@ -320,9 +383,15 @@ const Navbar = () => {
                           </div>
                         )}
                       </div>
-                      <div className="px-4 py-3 border-t border-gray-100">
-                        <button className="text-sm text-indigo-600 hover:text-indigo-500 font-medium">
-                          View all notifications
+                      <div className="px-4 py-3 border-t border-gray-100 flex justify-between">
+                        <button
+                          onClick={handleMarkAllAsRead}
+                          className="text-xs text-indigo-600 hover:text-indigo-500 font-medium"
+                        >
+                          Mark all as read
+                        </button>
+                        <button className="text-xs text-gray-500 hover:text-gray-700 font-medium">
+                          Clear all
                         </button>
                       </div>
                     </div>
@@ -464,6 +533,20 @@ const Navbar = () => {
                     </div>
                   )}
                 </div>
+
+                <button
+                  onClick={() => {
+                    navigate('/messages');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`p-2 rounded-lg transition-colors ${location.pathname === '/messages'
+                      ? 'text-indigo-600 bg-indigo-50'
+                      : 'text-gray-600 hover:text-indigo-600 hover:bg-indigo-50'
+                    }`}
+                  aria-label="Messages"
+                >
+                  <MessageSquare className="h-5 w-5" />
+                </button>
               </>
             )}
 
@@ -512,11 +595,10 @@ const Navbar = () => {
 
                   <Link
                     to={getDashboardLink()}
-                    className={`block px-3 py-3 rounded-lg text-base font-medium transition-colors ${
-                      location.pathname === getDashboardLink()
-                        ? 'text-indigo-600 bg-indigo-50'
-                        : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
-                    }`}
+                    className={`block px-3 py-3 rounded-lg text-base font-medium transition-colors ${location.pathname === getDashboardLink()
+                      ? 'text-indigo-600 bg-indigo-50'
+                      : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                      }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <div className="flex items-center space-x-3">

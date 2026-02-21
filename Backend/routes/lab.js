@@ -8,7 +8,8 @@ const {
   getPendingTests,
   getEquipmentStatus,
   completeLabTest,
-  recordSpecimen
+  recordSpecimen,
+  getByBarcode
 } = require('../controllers/labController');
 const { protect, authorize } = require('../middleware/auth');
 
@@ -39,5 +40,8 @@ router.patch('/test-results/:id/specimen', recordSpecimen);
 
 // @route   GET /api/lab/equipment-status
 router.get('/equipment-status', getEquipmentStatus);
+
+// @route   GET /api/lab/barcode/:barcode
+router.get('/barcode/:barcode', getByBarcode);
 
 module.exports = router;

@@ -72,6 +72,12 @@ export const adminApi = {
   getDashboardStats: () => apiRequest('/admin/dashboard-stats'),
   addUser: (userData) => apiRequest('/admin/users', { method: 'POST', body: JSON.stringify(userData) }),
   getUsers: () => apiRequest('/admin/users'),
+  getSettings: () => apiRequest('/admin/settings'),
+  updateSettings: (settings) => apiRequest('/admin/settings', { method: 'PATCH', body: JSON.stringify(settings) }),
+  getLogs: (params) => {
+    const queryString = new URLSearchParams(params).toString();
+    return apiRequest(`/admin/logs?${queryString}`);
+  },
 };
 
 export const doctorApi = {
@@ -124,7 +130,27 @@ export const labApi = {
   recordSpecimen: (id, data) => apiRequest(`/lab/test-results/${id}/specimen`, {
     method: 'PATCH',
     body: JSON.stringify(data)
-  })
+  }),
+  getByBarcode: (barcode) => apiRequest(`/lab/barcode/${barcode}`)
+};
+export const notificationApi = {
+  list: () => apiRequest('/notifications'),
+  markAsRead: (id) => apiRequest(`/notifications/${id}/read`, { method: 'PATCH' }),
+  markAllAsRead: () => apiRequest('/notifications/read-all', { method: 'PATCH' }),
+  delete: (id) => apiRequest(`/notifications/${id}`, { method: 'DELETE' })
 };
 
+export const prescriptionApi = {
+  listMy: () => apiRequest('/prescriptions/my'),
+  getById: (id) => apiRequest(`/prescriptions/${id}`),
+  requestRefill: (id) => apiRequest(`/prescriptions/${id}/refill`, { method: 'POST' })
+};
 
+export const messageApi = {
+  getInbox: () => apiRequest('/messages/inbox'),
+  getConversation: (userId) => apiRequest(`/messages/conversation/${userId}`),
+  sendMessage: (data) => apiRequest('/messages', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  })
+};
