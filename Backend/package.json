@@ -10,6 +10,7 @@
     "test:watch": "jest --watch --testTimeout=10000",
     "test:coverage": "jest --coverage --testTimeout=10000",
     "seed": "node scripts/seedDatabase.js",
+    "seed:sample": "node scripts/pushSampleAccounts.js",
     "migrate": "node scripts/migrateDatabase.js",
     "migrate:rollback": "node scripts/migrateDatabase.js rollback",
     "backup": "node scripts/backupDatabase.js",
