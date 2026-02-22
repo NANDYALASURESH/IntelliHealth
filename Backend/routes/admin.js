@@ -10,7 +10,9 @@ const {
   createUser,
   deleteUser,
   getSystemHealth,
-  assignPrimaryDoctor
+  assignPrimaryDoctor,
+  getSettings,
+  updateSettings
 } = require('../controllers/adminController');
 const { protect, authorize } = require('../middleware/auth');
 
