@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, Edit, Trash2, UserPlus, Filter, X } from 'lucide-react';
 import { adminApi } from '../../services/api';
 import toast from 'react-hot-toast';
+import AddUserModal from './AddUserModal';
 
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
@@ -12,6 +13,7 @@ const UserManagement = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
 
     useEffect(() => {
         fetchUsers();
@@ -134,6 +136,13 @@ const UserManagement = () => {
                         <option value="patient">Patient</option>
                         <option value="lab">Lab</option>
                     </select>
+                    <button
+                        onClick={() => setShowAddModal(true)}
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    >
+                        <UserPlus className="w-4 h-4" />
+                        Add User
+                    </button>
                 </div>
             </div>
 
@@ -185,8 +194,8 @@ const UserManagement = () => {
                                         <button
                                             onClick={() => toggleUserStatus(user)}
                                             className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full cursor-pointer transition-colors ${user.isActive
-                                                    ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                                                    : 'bg-red-100 text-red-800 hover:bg-red-200'
+                                                ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                                                : 'bg-red-100 text-red-800 hover:bg-red-200'
                                                 }`}
                                         >
                                             {user.isActive ? 'Active' : 'Inactive'}
@@ -271,6 +280,12 @@ const UserManagement = () => {
                     <p className="text-2xl font-bold text-purple-600">{users.filter(u => u.isActive).length}</p>
                 </div>
             </div>
+            {showAddModal && (
+                <AddUserModal
+                    onClose={() => setShowAddModal(false)}
+                    onSuccess={fetchUsers}
+                />
+            )}
         </div>
     );
 };

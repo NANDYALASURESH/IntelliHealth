@@ -4,8 +4,6 @@ const Prescription = require('../models/Prescription');
 const { protect } = require('../middleware/auth');
 const { formatResponse } = require('../utils/responseFormatter');
 
-router.use(protect);
-
 const {
   createPrescription,
   getPrescriptionsByPatient,

@@ -71,7 +71,12 @@ export async function apiRequest(path, options = {}) {
 export const adminApi = {
   getDashboardStats: () => apiRequest('/admin/dashboard-stats'),
   addUser: (userData) => apiRequest('/admin/users', { method: 'POST', body: JSON.stringify(userData) }),
-  getUsers: () => apiRequest('/admin/users'),
+  getUsers: (params) => {
+    const queryString = new URLSearchParams(params || {}).toString();
+    return apiRequest(`/admin/users?${queryString}`);
+  },
+  deleteUser: (id) => apiRequest(`/admin/users/${id}`, { method: 'DELETE' }),
+  updateUser: (id, data) => apiRequest(`/admin/users/${id}/status`, { method: 'PATCH', body: JSON.stringify(data) }),
   getSettings: () => apiRequest('/admin/settings'),
   updateSettings: (settings) => apiRequest('/admin/settings', { method: 'PATCH', body: JSON.stringify(settings) }),
   getLogs: (params) => {
@@ -97,7 +102,6 @@ export const doctorApi = {
     method: 'POST',
     body: JSON.stringify(data)
   }),
-  getPatientPrescriptions: (patientId) => apiRequest(`/prescriptions/patient/${patientId}`),
   getPatientPrescriptions: (patientId) => apiRequest(`/prescriptions/patient/${patientId}`),
   getPatientRecords: (patientId) => apiRequest(`/medical-records/patient/${patientId}`),
   getPatientHistory: (patientId) => apiRequest(`/doctor/patients/${patientId}/history`),

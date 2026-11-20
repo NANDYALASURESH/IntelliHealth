@@ -9,7 +9,7 @@ const {
   getLabResults,
   updateProfile,
   getDoctors
-} = require('./patientController');
+} = require('../controllers/patientController');
 const { protect, authorize } = require('../middleware/auth');
 const { validateAppointment } = require('../middleware/validation');
 

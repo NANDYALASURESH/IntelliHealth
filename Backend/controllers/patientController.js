@@ -4,6 +4,7 @@ const Appointment = require('../models/Appointment');
 const Prescription = require('../models/Prescription');
 const MedicalRecord = require('../models/MedicalRecord');
 const Patient = require('../models/Patient');
+const Doctor = require('../models/Doctor');
 const LabResult = require('../models/LabResult');
 const { formatResponse } = require('../utils/responseFormatter');
 
@@ -250,5 +251,20 @@ exports.updateProfile = async (req, res) => {
   } catch (error) {
     console.error('Update patient profile error:', error);
     res.status(400).json(formatResponse(false, error.message, null));
+  }
+};
+
+// @desc    Get all available doctors
+// @route   GET /api/patient/doctors
+// @access  Private (Patient only)
+exports.getDoctors = async (req, res) => {
+  try {
+    const doctors = await Doctor.find({ isActive: true })
+      .select('name specialization department consultationFee rating bio')
+      .sort({ 'rating.average': -1 });
+    res.status(200).json(formatResponse(true, 'Doctors retrieved successfully', { doctors }));
+  } catch (error) {
+    console.error('Get doctors error:', error);
+    res.status(500).json(formatResponse(false, 'Error retrieving doctors', null));
   }
 };
