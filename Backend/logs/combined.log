@@ -2638,3 +2638,44 @@
 {"level":"info","message":"📱 Environment: development","service":"intellihealth-api","timestamp":"2026-01-29 11:17:47"}
 {"level":"info","message":"🌍 Client URL(s): https://intelli-health-ijg3sno8b-sureshs-projects-460bee00.vercel.app, http://localhost:5173","service":"intellihealth-api","timestamp":"2026-01-29 11:17:47"}
 {"level":"error","message":"MongoDB connection failed: Could not connect to any servers in your MongoDB Atlas cluster. One common reason is that you're trying to access the database from an IP that isn't whitelisted. Make sure your current IP address is on your Atlas cluster's IP whitelist: https://www.mongodb.com/docs/atlas/security-whitelist/","service":"intellihealth-api","timestamp":"2026-01-29 11:18:17"}
+{"level":"info","message":"🚀 IntelliHealth API Server running on port 5000","service":"intellihealth-api","timestamp":"2026-11-21 02:51:36"}
+{"level":"info","message":"📱 Environment: development","service":"intellihealth-api","timestamp":"2026-11-21 02:51:36"}
+{"level":"info","message":"🌍 Client URL(s): https://intelli-health.vercel.app, https://intelli-health-ijg3sno8b-sureshs-projects-460bee00.vercel.app, http://localhost:5173","service":"intellihealth-api","timestamp":"2026-11-21 02:51:36"}
+{"level":"info","message":"MongoDB Connected: localhost","service":"intellihealth-api","timestamp":"2026-11-21 02:51:36"}
+{"level":"info","message":"POST /api/auth/login - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:52:39"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:52:40"}
+{"level":"info","message":"GET /api/admin/dashboard-stats - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:52:40"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:52:40"}
+{"level":"info","message":"GET /api/admin/dashboard-stats - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:52:40"}
+{"level":"info","message":"GET /api/admin/dashboard-stats - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:52:48"}
+{"level":"info","message":"GET /api/admin/dashboard-stats - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:52:48"}
+{"level":"info","message":"GET /api/admin/users? - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:52:50"}
+{"level":"info","message":"GET /api/admin/users? - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:52:50"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:53:41"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:54:41"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:55:40"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:56:41"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:57:41"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 02:58:41"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:00:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:01:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:02:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:03:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:04:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:04:41"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:06:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:07:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:08:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:09:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:10:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:11:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:12:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:13:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:14:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:15:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:15:53"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:16:41"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:18:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:19:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:20:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:21:07"}
