@@ -2680,3 +2680,8 @@
 {"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:20:07"}
 {"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:21:07"}
 {"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:22:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:23:07"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:23:41"}
+{"level":"info","message":"GET /api/admin/dashboard-stats - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:23:41"}
+{"level":"info","message":"GET /api/notifications - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:23:41"}
+{"level":"info","message":"GET /api/admin/dashboard-stats - ::1","service":"intellihealth-api","timestamp":"2026-11-21 03:23:41"}
